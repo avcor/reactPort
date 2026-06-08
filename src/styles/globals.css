@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── NyghtSerif (local — same font as parthh.in) ─── */
+@font-face {
+  font-family: 'nyghtSerif';
+  src: url('/fonts/NyghtSerif-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'nyghtSerif';
+  src: url('/fonts/NyghtSerif-MediumItalic.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'nyghtSerif';
+  src: url('/fonts/NyghtSerif-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ─── Theme tokens (RGB channels for opacity support) ─── */
+:root {
+  --page-bg: 0 0 0;
+  --surface: 10 10 10;
+  --surface-2: 17 17 17;
+  --border-rgb: 255 255 255;
+  --accent: 55 138 221;
+  --accent-dim: 15 40 75;
+  --text-primary: 237 237 237;
+  --text-muted: 140 140 140;
+  --text-dim: 70 70 70;
+}
+
+:root.light {
+  --page-bg: 250 250 250;
+  --surface: 255 255 255;
+  --surface-2: 240 240 240;
+  --border-rgb: 0 0 0;
+  --accent: 34 112 192;
+  --accent-dim: 218 234 255;
+  --text-primary: 13 13 13;
+  --text-muted: 85 85 85;
+  --text-dim: 170 170 170;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    background-color: rgb(var(--page-bg));
+    color: rgb(var(--text-primary));
+  }
+  body {
+    font-family: 'Outfit', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  * {
+    box-sizing: border-box;
+  }
+}
+
+@layer utilities {
+  .bg-white\/8 {
+    background-color: rgb(255 255 255 / 0.08);
+  }
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      rgb(var(--surface-2)) 25%,
+      rgb(var(--surface)) 50%,
+      rgb(var(--surface-2)) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

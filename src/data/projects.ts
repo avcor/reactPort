@@ -1,0 +1,43 @@
+import type { Project } from '@/types'
+
+export const projects: Project[] = [
+  {
+    id: 1,
+    name: 'Project Name',
+    tagline: 'One-line description',
+    tech: ['Kotlin', 'Jetpack Compose', 'Room', 'Retrofit'],
+    problem: '',
+    solution: '',
+    impact: '',
+    screenshots: [],
+    github: '#',
+    playstore: '#',
+    badge: 'Play Store',
+  },
+  {
+    id: 2,
+    name: 'Project Name',
+    tagline: 'One-line description',
+    tech: ['Kotlin', 'Coroutines', 'Hilt', 'WorkManager'],
+    problem: '',
+    solution: '',
+    impact: '',
+    screenshots: [],
+    github: '#',
+    playstore: '#',
+    badge: null,
+  },
+  {
+    id: 3,
+    name: 'Project Name',
+    tagline: 'One-line description',
+    tech: ['Kotlin', 'MVVM', 'Clean Architecture', 'Firebase'],
+    problem: '',
+    solution: '',
+    impact: '',
+    screenshots: [],
+    github: '#',
+    playstore: '#',
+    badge: null,
+  },
+]
