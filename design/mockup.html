@@ -853,11 +853,536 @@
       border-bottom: 1px dashed var(--border);
     }
     .sub-cs:last-child { border-bottom: none; margin-bottom: 0; }
+
+
+    /* ============================================================
+       IMAGES LEFT / CONTENT RIGHT — two-column case study layout
+    ============================================================ */
+
+    /* Main case studies (cs1–cs5, cs-ecg) */
+    .cs:not(#cs-home) {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      column-gap: 48px;
+      align-items: start;
+    }
+
+    /* Screenshots panel → left column, sticky while content scrolls */
+    .cs:not(#cs-home) > .shots-grid {
+      grid-column: 1;
+      grid-row: 1 / span 10;
+      position: sticky;
+      top: 88px;
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 10px;
+      align-self: start;
+    }
+
+    /* All other direct children → right column, stacked */
+    .cs:not(#cs-home) > :not(.shots-grid) {
+      grid-column: 2;
+    }
+
+    /* Sub-cases within Dozee home app */
+    .sub-cs {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      column-gap: 40px;
+      align-items: start;
+    }
+
+    .sub-cs > .shots-grid {
+      grid-column: 1;
+      grid-row: 1;
+      position: sticky;
+      top: 88px;
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 10px;
+      align-self: start;
+    }
+
+    .sub-cs > .cs-top {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
     .sub-cs-title {
       font-size: 1.1rem;
       font-weight: 650;
       letter-spacing: -0.015em;
       margin-bottom: 8px;
+    }
+
+    /* ============================================================
+       LEFT TIMELINE
+    ============================================================ */
+    #timeline {
+      position: fixed;
+      left: 0;
+      top: 60px;
+      bottom: 0;
+      width: 152px;
+      z-index: 80;
+      display: none;
+      pointer-events: none;
+    }
+
+    @media (min-width: 1440px) {
+      #timeline { display: block; }
+    }
+
+    .tl-track {
+      position: relative;
+      height: 100%;
+      padding: 40px 0;
+    }
+
+    /* Static dim spine */
+    .tl-spine {
+      position: absolute;
+      left: 22px;
+      top: 40px;
+      bottom: 40px;
+      width: 1px;
+      background: var(--border);
+      overflow: hidden;
+    }
+
+    /* Accent fill that grows with scroll */
+    .tl-fill {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 0%;
+      background: linear-gradient(to bottom,
+        var(--accent) 0%,
+        rgba(77,142,245,0.25) 100%
+      );
+      transition: height 0.1s linear;
+    }
+
+    /* Glowing cursor that slides down */
+    .tl-cursor {
+      position: absolute;
+      left: 16px;
+      top: 40px;
+      width: 13px; height: 13px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      background: var(--bg);
+      box-shadow:
+        0 0 0 3px rgba(77,142,245,0.12),
+        0 0 12px rgba(77,142,245,0.4);
+      transform: translateY(-50%);
+      transition: top 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* Items container, absolutely positioned */
+    .tl-items {
+      position: absolute;
+      top: 40px; bottom: 40px;
+      left: 0; right: 0;
+    }
+
+    /* Individual item */
+    .tl-item {
+      position: absolute;
+      left: 0; right: 0;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding-left: 12px;
+      transform: translateY(-50%);
+      pointer-events: all;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* Dot */
+    .tl-d {
+      flex-shrink: 0;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 1.5px solid var(--border-hover);
+      z-index: 1;
+      transition: all 0.2s;
+      width: 8px; height: 8px;
+    }
+
+    .tl-item[data-type="company"] .tl-d {
+      width: 10px; height: 10px;
+      border-color: var(--accent-border);
+      background: var(--accent-dim);
+    }
+
+    .tl-item[data-type="sub"] .tl-d {
+      width: 5px; height: 5px;
+    }
+
+    .tl-item.active .tl-d {
+      background: var(--accent) !important;
+      border-color: var(--accent) !important;
+      box-shadow: 0 0 0 2px rgba(77,142,245,0.2);
+    }
+
+    .tl-item.visited .tl-d {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.1);
+    }
+
+    /* Labels */
+    .tl-lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      white-space: nowrap;
+      letter-spacing: 0.04em;
+      pointer-events: none;
+      transition: color 0.2s, opacity 0.2s;
+      color: var(--text-dim);
+    }
+
+    /* Company labels: always accent */
+    .tl-item[data-type="company"] .tl-lbl {
+      color: var(--accent);
+      font-weight: 500;
+      font-size: 0.6rem;
+      letter-spacing: 0.06em;
+    }
+
+    /* Sub-item labels: hidden until hover/active */
+    .tl-item[data-type="sub"] .tl-lbl {
+      color: transparent;
+    }
+    .tl-item[data-type="sub"]:hover .tl-lbl,
+    .tl-item[data-type="sub"].active .tl-lbl {
+      color: var(--text-muted);
+    }
+
+    /* Active overrides */
+    .tl-item.active    .tl-lbl { color: var(--text) !important; }
+    .tl-item:not([data-type="sub"]):hover .tl-lbl { color: var(--text-muted); }
+    .tl-item[data-type="company"].active .tl-lbl  { color: var(--accent-bright) !important; }
+
+    /* ============================================================
+       PHILOSOPHY
+    ============================================================ */
+    #philosophy {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      border-top: 1px solid var(--border);
+    }
+
+    /* Faint white spotlight behind the text */
+    #philosophy::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 900px; height: 700px;
+      background: radial-gradient(ellipse at center,
+        rgba(255,255,255,0.028) 0%,
+        transparent 65%
+      );
+      pointer-events: none;
+    }
+
+    .phil-wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+      padding: 120px 52px;
+      margin: 0 auto;
+    }
+
+    /* Eyebrow */
+    .phil-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.66rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 52px;
+    }
+    .phil-eyebrow::before {
+      content: '';
+      display: block;
+      width: 18px; height: 1px;
+      background: var(--text-dim);
+    }
+
+    /* Opening line — the headline */
+    .phil-lead {
+      font-size: clamp(1.7rem, 3.6vw, 2.8rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      color: var(--text);
+      margin-bottom: 52px;
+    }
+
+    /* Body stanzas */
+    .phil-stanza {
+      font-size: clamp(1rem, 1.8vw, 1.22rem);
+      color: var(--text-muted);
+      line-height: 1.85;
+      margin-bottom: 36px;
+    }
+    .phil-stanza:last-child { margin-bottom: 0; }
+
+    /* The "They remember" trio — brighter */
+    .phil-trio {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin: 6px 0 0 0;
+    }
+    .phil-trio-line {
+      font-size: clamp(1rem, 1.8vw, 1.22rem);
+      color: var(--text);
+      font-weight: 500;
+      line-height: 1.7;
+    }
+    .phil-trio-line::before {
+      content: '— ';
+      color: var(--accent);
+      font-weight: 400;
+    }
+
+    /* The final personal statement */
+    .phil-statement {
+      font-size: clamp(1rem, 1.8vw, 1.22rem);
+      color: var(--text-muted);
+      line-height: 2;
+      margin-bottom: 0;
+    }
+    .phil-statement strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    /* Accent examples — the three specific things I did */
+    .phil-examples {
+      margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding-left: 20px;
+      border-left: 2px solid var(--accent-border);
+    }
+    .phil-example {
+      font-size: clamp(0.9rem, 1.6vw, 1.1rem);
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+    .phil-example em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    /* Separator rule after philosophy */
+    .phil-rule {
+      width: 1px;
+      height: 64px;
+      background: linear-gradient(to bottom, var(--border), transparent);
+      margin: 0 auto;
+    }
+
+    /* ============================================================
+       COMPANY INTRO SCREENS (full viewport)
+    ============================================================ */
+    .co-screen-wrapper {
+      position: relative;
+      overflow: hidden;
+      border-top: 1px solid var(--border);
+    }
+
+    /* Faint dot-grid background */
+    .co-bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+      background-size: 36px 36px;
+      mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, black 30%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, black 30%, transparent 100%);
+    }
+
+    .co-glow-blue {
+      position: absolute;
+      top: 50%; left: 35%;
+      transform: translate(-50%, -50%);
+      width: 900px; height: 700px;
+      background: radial-gradient(ellipse at center, rgba(77,142,245,0.09) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .co-glow-teal {
+      position: absolute;
+      top: 50%; right: 10%;
+      transform: translateY(-50%);
+      width: 700px; height: 700px;
+      background: radial-gradient(ellipse at center, rgba(48,212,152,0.07) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* Giant faint chapter number watermark */
+    .co-watermark {
+      position: absolute;
+      right: -10px; top: 50%;
+      transform: translateY(-50%);
+      font-size: clamp(180px, 22vw, 300px);
+      font-weight: 900;
+      letter-spacing: -0.06em;
+      line-height: 1;
+      color: rgba(255,255,255,0.025);
+      pointer-events: none;
+      user-select: none;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .co-screen {
+      min-height: 100vh;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 120px 52px 80px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 80px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .co-left {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .co-eyebrow {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .co-chapter-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.66rem;
+      color: var(--text-dim);
+      letter-spacing: 0.14em;
+    }
+
+    .co-name {
+      font-size: clamp(3.8rem, 9vw, 7rem);
+      font-weight: 900;
+      letter-spacing: -0.045em;
+      line-height: 0.93;
+      margin-bottom: 10px;
+    }
+
+    .co-name-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      letter-spacing: 0.04em;
+      margin-bottom: 32px;
+    }
+
+    .co-rule {
+      width: 40px; height: 1px;
+      background: var(--accent);
+      margin-bottom: 28px;
+    }
+
+    .co-what {
+      font-size: 1.0rem;
+      color: var(--text-muted);
+      line-height: 1.85;
+      max-width: 480px;
+      margin-bottom: 24px;
+    }
+
+    .co-role-line {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      letter-spacing: 0.02em;
+      margin-bottom: 44px;
+      line-height: 1.6;
+    }
+
+    .co-cta {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+      text-decoration: none;
+      transition: color 0.15s;
+      width: fit-content;
+    }
+    .co-cta:hover { color: var(--accent); }
+    .co-cta-line {
+      display: block;
+      width: 32px; height: 1px;
+      background: currentColor;
+      position: relative;
+      transition: width 0.2s;
+    }
+    .co-cta:hover .co-cta-line { width: 48px; }
+    .co-cta-line::after {
+      content: '';
+      position: absolute;
+      right: 0; top: -3px;
+      width: 6px; height: 6px;
+      border-right: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
+      transform: rotate(-45deg);
+    }
+
+    /* Metrics grid */
+    .co-metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      overflow: hidden;
+    }
+
+    .co-metric {
+      background: var(--surface);
+      padding: 22px 24px;
+      display: flex; flex-direction: column; gap: 5px;
+      transition: background 0.15s;
+    }
+    .co-metric:hover { background: var(--surface-2); }
+
+    .co-metric-val {
+      font-size: clamp(1.5rem, 2.8vw, 2.1rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .co-metric-lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.63rem;
+      color: var(--text-dim);
+      letter-spacing: 0.04em;
+      line-height: 1.5;
+    }
+
+    /* Case study container after intro */
+    .chapter-work {
+      padding-top: 80px;
     }
 
     /* ============================================================
@@ -869,13 +1394,21 @@
       #hero { padding: 100px 24px 80px; }
       .hero-stats { grid-template-columns: repeat(2,1fr); }
       .about-grid { grid-template-columns: 1fr; gap: 40px; }
-      .chapter-header::before { display: none; }
       .cs-top { grid-template-columns: 1fr; gap: 24px; }
       .cs-impact { align-items: flex-start; text-align: left; }
       .narrative { grid-template-columns: 1fr; }
       .shots-4, .shots-3 { grid-template-columns: repeat(2,1fr); }
       .skills-grid { grid-template-columns: 1fr; }
       footer { flex-direction: column; gap: 6px; text-align: center; }
+      .co-screen { grid-template-columns: 1fr; gap: 44px; padding: 100px 24px 60px; }
+      .co-watermark { display: none; }
+      /* collapse two-column case study layout on mobile */
+      .cs:not(#cs-home) { grid-template-columns: 1fr; }
+      .cs:not(#cs-home) > .shots-grid { grid-column: 1; grid-row: auto; position: static; grid-template-columns: repeat(2,1fr) !important; }
+      .cs:not(#cs-home) > :not(.shots-grid) { grid-column: 1; }
+      .sub-cs { grid-template-columns: 1fr; }
+      .sub-cs > .shots-grid { grid-column: 1; grid-row: auto; position: static; }
+      .sub-cs > .cs-top { grid-column: 1; grid-row: auto; }
     }
   </style>
 </head>
@@ -885,12 +1418,38 @@
 <div id="progress"></div>
 
 <!-- ============================================================
+     LEFT TIMELINE
+============================================================ -->
+<aside id="timeline" aria-label="Section progress">
+  <div class="tl-track">
+    <div class="tl-spine"><div class="tl-fill" id="tl-fill"></div></div>
+    <div class="tl-cursor" id="tl-cursor"></div>
+    <div class="tl-items" id="tl-items">
+      <a class="tl-item" href="#about"      data-id="about"      data-type="main">    <span class="tl-d"></span><span class="tl-lbl">About</span></a>
+      <a class="tl-item" href="#philosophy" data-id="philosophy" data-type="main">    <span class="tl-d"></span><span class="tl-lbl">Philosophy</span></a>
+      <a class="tl-item" href="#digii"      data-id="digii"      data-type="company"> <span class="tl-d"></span><span class="tl-lbl">Digii</span></a>
+      <a class="tl-item" href="#cs1"        data-id="cs1"        data-type="sub">     <span class="tl-d"></span><span class="tl-lbl">Flutter</span></a>
+      <a class="tl-item" href="#cs2"        data-id="cs2"        data-type="sub">     <span class="tl-d"></span><span class="tl-lbl">Liveness</span></a>
+      <a class="tl-item" href="#cs3"        data-id="cs3"        data-type="sub">     <span class="tl-d"></span><span class="tl-lbl">Compose</span></a>
+      <a class="tl-item" href="#cs4"        data-id="cs4"        data-type="sub">     <span class="tl-d"></span><span class="tl-lbl">Payments</span></a>
+      <a class="tl-item" href="#cs5"        data-id="cs5"        data-type="sub">     <span class="tl-d"></span><span class="tl-lbl">Multi-tenant</span></a>
+      <a class="tl-item" href="#dozee"      data-id="dozee"      data-type="company"> <span class="tl-d"></span><span class="tl-lbl">Dozee</span></a>
+      <a class="tl-item" href="#cs-home"    data-id="cs-home"    data-type="sub">     <span class="tl-d"></span><span class="tl-lbl">Home App</span></a>
+      <a class="tl-item" href="#cs-ecg"     data-id="cs-ecg"     data-type="sub">     <span class="tl-d"></span><span class="tl-lbl">ECG App</span></a>
+      <a class="tl-item" href="#skills"     data-id="skills"     data-type="main">    <span class="tl-d"></span><span class="tl-lbl">Skills</span></a>
+      <a class="tl-item" href="#contact"    data-id="contact"    data-type="main">    <span class="tl-d"></span><span class="tl-lbl">Contact</span></a>
+    </div>
+  </div>
+</aside>
+
+<!-- ============================================================
      NAV
 ============================================================ -->
 <nav id="navbar">
   <span class="nav-logo">AV</span>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
+    <li><a href="#philosophy">Philosophy</a></li>
     <li><a href="#digii">Digii</a></li>
     <li><a href="#dozee">Dozee</a></li>
     <li><a href="#skills">Skills</a></li>
@@ -1020,55 +1579,115 @@
 
 
 <!-- ============================================================
-     CHAPTER 01 — DIGII
+     PHILOSOPHY
 ============================================================ -->
-<section id="digii" class="chapter">
-  <div class="wrap">
+<section id="philosophy">
+  <div class="phil-wrap">
 
-    <div class="chapter-header reveal">
-      <div class="chapter-meta">
-        <span class="chapter-num mono">CHAPTER 01</span>
+    <p class="phil-eyebrow">// philosophy</p>
+
+    <p class="phil-lead reveal">
+      The best engineered products<br/>
+      are the ones nobody notices.
+    </p>
+
+    <div class="phil-stanza reveal">
+      Users don&rsquo;t remember architecture diagrams,<br/>
+      framework choices, or clever abstractions.
+    </div>
+
+    <div class="reveal" style="margin-bottom:36px;">
+      <p style="font-size:clamp(1rem,1.8vw,1.22rem);color:var(--text-muted);line-height:1.85;margin-bottom:14px;">They remember:</p>
+      <div class="phil-trio">
+        <span class="phil-trio-line">the app was fast</span>
+        <span class="phil-trio-line">it never lost their data</span>
+        <span class="phil-trio-line">it worked when they needed it</span>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <p class="phil-statement">
+        My work focuses on <strong>removing friction</strong> &mdash;
+      </p>
+      <div class="phil-examples">
+        <span class="phil-example">reducing a <em>4-second startup delay</em> to negligible</span>
+        <span class="phil-example">eliminating <em>repeated logins</em> with seamless account switching</span>
+        <span class="phil-example">ensuring <em>medical data reaches doctors</em> even when the network doesn&rsquo;t</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+<div class="phil-rule"></div>
+
+
+<!-- ============================================================
+     DIGII — FULL-SCREEN INTRO
+============================================================ -->
+<div class="co-screen-wrapper">
+  <div class="co-bg-grid"></div>
+  <div class="co-glow-blue"></div>
+  <div class="co-watermark" aria-hidden="true">01</div>
+  <section id="digii" class="co-screen">
+    <div class="co-left reveal">
+      <div class="co-eyebrow">
+        <span class="co-chapter-label">CHAPTER 01</span>
         <span class="badge badge-active">
           <span class="badge-dot"></span>
           Current Role
         </span>
       </div>
-      <h2 class="chapter-company">
-        Digii <span class="dim">/ formerly CollPoll</span>
-      </h2>
-      <p class="chapter-role-line">
-        Product Engineer III &nbsp;&middot;&nbsp;
-        <span class="mono">Oct 2023 &rarr; Present &nbsp;&nbsp;(2.5 yrs) &nbsp;&middot;&nbsp; Remote</span>
+      <h2 class="co-name gradient-name">Digii</h2>
+      <p class="co-name-sub">/ formerly CollPoll</p>
+      <div class="co-rule"></div>
+      <p class="co-what">
+        B2B SaaS ERP for Indian higher-education institutions &mdash;
+        academics, payments, hostel management, campus access control, and learning,
+        all delivered as a service to colleges across India.
+        I own the Android platform, serving <strong style="color:var(--text);font-weight:600;">500k+ students daily</strong> across all modules.
       </p>
-      <p class="chapter-desc">
-        Digii is a B2B SaaS ERP platform delivered to Indian higher-education institutions &mdash;
-        academics, payments, hostel management, campus access control, and learning modules.
-        I own the Android platform: architecture, performance, observability, and new feature delivery
-        across modules used daily by 500k+ students.
+      <p class="co-role-line">
+        Product Engineer III &nbsp;&middot;&nbsp; Oct 2023 &rarr; Present &nbsp;&middot;&nbsp; 2.5 yrs &nbsp;&middot;&nbsp; Remote
       </p>
-      <div class="chapter-metrics stagger">
-        <div>
-          <div class="cmetric-val">99.92%</div>
-          <div class="cmetric-lbl">crash-free sessions</div>
+      <a href="#cs1" class="co-cta">
+        5 case studies below
+        <span class="co-cta-line"></span>
+      </a>
+    </div>
+    <div class="co-right stagger">
+      <div class="co-metrics">
+        <div class="co-metric">
+          <span class="co-metric-val">99.92%</span>
+          <span class="co-metric-lbl">crash-free sessions<br/>was 97.4%</span>
         </div>
-        <div>
-          <div class="cmetric-val">500k+</div>
-          <div class="cmetric-lbl">active users</div>
+        <div class="co-metric">
+          <span class="co-metric-val">500k+</span>
+          <span class="co-metric-lbl">daily active<br/>users</span>
         </div>
-        <div>
-          <div class="cmetric-val">&minus;80%</div>
-          <div class="cmetric-lbl">CI/CD build time</div>
+        <div class="co-metric">
+          <span class="co-metric-val">&minus;80%</span>
+          <span class="co-metric-lbl">CI/CD build time<br/>90 min &rarr; 18 min</span>
         </div>
-        <div>
-          <div class="cmetric-val">&minus;99%</div>
-          <div class="cmetric-lbl">storage waste</div>
+        <div class="co-metric">
+          <span class="co-metric-val">&minus;99%</span>
+          <span class="co-metric-lbl">storage waste<br/>45 GB &rarr; 400 MB</span>
         </div>
-        <div>
-          <div class="cmetric-val">4.5&#9733;</div>
-          <div class="cmetric-lbl">Play Store rating</div>
+        <div class="co-metric">
+          <span class="co-metric-val">4.5&#9733;</span>
+          <span class="co-metric-lbl">Play Store<br/>rating</span>
+        </div>
+        <div class="co-metric">
+          <span class="co-metric-val">5</span>
+          <span class="co-metric-lbl">major features<br/>shipped</span>
         </div>
       </div>
     </div>
+  </section>
+</div>
+
+<!-- DIGII CASE STUDIES -->
+<section class="chapter-work">
+  <div class="wrap">
 
     <!-- ── CS 01: Flutter Integration ── -->
     <div class="cs reveal" id="cs1">
@@ -1529,53 +2148,77 @@
     </div>
 
   </div><!-- /wrap -->
-</section>
+</section><!-- /chapter-work digii -->
 
 
 <!-- ============================================================
-     CHAPTER 02 — DOZEE
+     DOZEE — FULL-SCREEN INTRO
 ============================================================ -->
-<section id="dozee" class="chapter" style="padding-top: 64px;">
-  <div class="wrap">
-
-    <div class="chapter-header reveal">
-      <div class="chapter-meta">
-        <span class="chapter-num mono">CHAPTER 02</span>
+<div class="co-screen-wrapper">
+  <div class="co-bg-grid"></div>
+  <div class="co-glow-teal"></div>
+  <div class="co-watermark" aria-hidden="true">02</div>
+  <section id="dozee" class="co-screen">
+    <div class="co-left reveal">
+      <div class="co-eyebrow">
+        <span class="co-chapter-label">CHAPTER 02</span>
         <span class="badge badge-past">
           <span class="badge-dot"></span>
           2021 &ndash; 2023
         </span>
       </div>
-      <h2 class="chapter-company">Dozee</h2>
-      <p class="chapter-role-line">
-        Software Engineer II &nbsp;&middot;&nbsp;
-        <span class="mono">Jun 2021 &rarr; Oct 2023 &nbsp;&nbsp;(2 yrs) &nbsp;&middot;&nbsp; Bengaluru</span>
+      <h2 class="co-name gradient-name">Dozee</h2>
+      <p class="co-name-sub">/ medical hardware</p>
+      <div class="co-rule"></div>
+      <p class="co-what">
+        Contactless vitals-monitoring hardware for hospitals and consumers &mdash;
+        SPO&#8322;, heart rate, breath rate, respiration, and sleep quality,
+        all without any wearable. I built <strong style="color:var(--text);font-weight:600;">two apps</strong>:
+        the consumer sleep-monitoring home app and a hospital-grade ECG app
+        built entirely from scratch for ICU-adjacent workflows.
       </p>
-      <p class="chapter-desc">
-        Dozee is a medical hardware company building contactless vitals-monitoring devices &mdash;
-        tracking SPO&#8322;, heart rate, breath rate, respiration, and sleep quality.
-        I built two Android/React Native applications: the consumer-facing sleep monitoring home app
-        and a hospital-grade ECG app created entirely from scratch.
+      <p class="co-role-line">
+        Software Engineer II &nbsp;&middot;&nbsp; Jun 2021 &rarr; Oct 2023 &nbsp;&middot;&nbsp; 2 yrs &nbsp;&middot;&nbsp; Bengaluru
       </p>
-      <div class="chapter-metrics stagger">
-        <div>
-          <div class="cmetric-val">99%</div>
-          <div class="cmetric-lbl">BLE connection rate</div>
+      <a href="#cs-home" class="co-cta">
+        4 case studies below
+        <span class="co-cta-line"></span>
+      </a>
+    </div>
+    <div class="co-right stagger">
+      <div class="co-metrics">
+        <div class="co-metric">
+          <span class="co-metric-val">99%</span>
+          <span class="co-metric-lbl">BLE connection<br/>success rate</span>
         </div>
-        <div>
-          <div class="cmetric-val">&minus;3s</div>
-          <div class="cmetric-lbl">chart load time</div>
+        <div class="co-metric">
+          <span class="co-metric-val">&minus;60%</span>
+          <span class="co-metric-lbl">chart render time<br/>5s &rarr; under 2s</span>
         </div>
-        <div>
-          <div class="cmetric-val">70%+</div>
-          <div class="cmetric-lbl">test coverage</div>
+        <div class="co-metric">
+          <span class="co-metric-val">70%+</span>
+          <span class="co-metric-lbl">unit &amp; integration<br/>test coverage</span>
         </div>
-        <div>
-          <div class="cmetric-val">&minus;4 MB</div>
-          <div class="cmetric-lbl">data per session</div>
+        <div class="co-metric">
+          <span class="co-metric-val">&minus;4 MB</span>
+          <span class="co-metric-lbl">mobile data<br/>per session</span>
+        </div>
+        <div class="co-metric">
+          <span class="co-metric-val">2</span>
+          <span class="co-metric-lbl">apps built<br/>Android + RN</span>
+        </div>
+        <div class="co-metric">
+          <span class="co-metric-val">0&rarr;1</span>
+          <span class="co-metric-lbl">ECG app built<br/>from scratch</span>
         </div>
       </div>
     </div>
+  </section>
+</div>
+
+<!-- DOZEE CASE STUDIES -->
+<section class="chapter-work">
+  <div class="wrap">
 
     <!-- DOZEE HOME APP -->
     <div class="cs reveal" id="cs-home">
@@ -2071,6 +2714,81 @@
     });
   }, { threshold: 0.4 });
   sections.forEach(s => activeObs.observe(s));
+
+  /* ── Left Timeline ── */
+  (function () {
+    const tlEl     = document.getElementById('timeline');
+    if (!tlEl) return;
+
+    const tlFill   = document.getElementById('tl-fill');
+    const tlCursor = document.getElementById('tl-cursor');
+    const spineEl  = tlEl.querySelector('.tl-spine');
+    const tlDots   = Array.from(tlEl.querySelectorAll('.tl-item'));
+
+    // Section order for visited/active logic
+    const order = [
+      'about','philosophy',
+      'digii','cs1','cs2','cs3','cs4','cs5',
+      'dozee','cs-home','cs-ecg',
+      'skills','contact'
+    ];
+
+    // Proportionally position each dot based on section's page offset
+    function layoutDots() {
+      const docH   = document.documentElement.scrollHeight;
+      const spineH = spineEl.offsetHeight;
+      tlDots.forEach(item => {
+        const el = document.getElementById(item.dataset.id);
+        if (!el) return;
+        const ratio = el.offsetTop / docH;
+        item.style.top = (ratio * spineH) + 'px';
+      });
+    }
+
+    // Update fill height and cursor position
+    function onScroll() {
+      const scrolled  = window.scrollY;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const progress  = maxScroll > 0 ? scrolled / maxScroll : 0;
+      const spineH    = spineEl.offsetHeight;
+      const topOffset = 40; // matches .tl-track padding-top
+
+      tlFill.style.height   = (progress * 100) + '%';
+      tlCursor.style.top    = (topOffset + progress * spineH) + 'px';
+    }
+
+    // Mark active + visited dots
+    let currentActive = '';
+    function setActive(id) {
+      if (id === currentActive) return;
+      currentActive = id;
+      const idx = order.indexOf(id);
+      tlDots.forEach(item => {
+        const iIdx = order.indexOf(item.dataset.id);
+        item.classList.remove('active', 'visited');
+        if (item.dataset.id === id)  item.classList.add('active');
+        else if (iIdx < idx)         item.classList.add('visited');
+      });
+    }
+
+    // Observe each section / case-study div
+    const tlObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) setActive(e.target.id);
+      });
+    }, { threshold: 0.25 });
+
+    order.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) tlObs.observe(el);
+    });
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', () => { layoutDots(); onScroll(); });
+
+    // Init after paint so offsetTops are settled
+    requestAnimationFrame(() => { layoutDots(); onScroll(); });
+  })();
 </script>
 
 </body>
