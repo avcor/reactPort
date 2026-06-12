@@ -1,0 +1,2077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abhishek Verma — Portfolio Design Mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================================================
+       DESIGN TOKENS
+    ============================================================ */
+    :root {
+      --bg:            #06060b;
+      --surface:       #0d0d18;
+      --surface-2:     #131322;
+      --surface-3:     #1a1a2e;
+      --border:        rgba(255,255,255,0.07);
+      --border-hover:  rgba(255,255,255,0.13);
+      --accent:        #4d8ef5;
+      --accent-bright: #6ba3ff;
+      --accent-dim:    rgba(77,142,245,0.10);
+      --accent-border: rgba(77,142,245,0.28);
+      --text:          #eaeaf5;
+      --text-muted:    #8888a2;
+      --text-dim:      #44445c;
+      --green:         #30d498;
+      --green-dim:     rgba(48,212,152,0.10);
+      --green-border:  rgba(48,212,152,0.22);
+      --r:  12px;
+      --rsm: 8px;
+      --rlg: 20px;
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      line-height: 1.7;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Subtle noise overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ============================================================
+       TYPOGRAPHY HELPERS
+    ============================================================ */
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    .section-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-eyebrow::before {
+      content: '';
+      display: block;
+      width: 18px;
+      height: 1px;
+      background: var(--text-dim);
+    }
+
+    .gradient-name {
+      background: linear-gradient(160deg, #ffffff 0%, #c0c0d8 60%, #8888aa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .gradient-accent {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-bright) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ============================================================
+       LAYOUT
+    ============================================================ */
+    .wrap {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 52px;
+    }
+
+    /* ============================================================
+       PROGRESS BAR
+    ============================================================ */
+    #progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 1px;
+      width: 0%;
+      background: var(--accent);
+      z-index: 200;
+      transition: width 0.08s linear;
+    }
+
+    /* ============================================================
+       NAV
+    ============================================================ */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 58px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      padding: 0 52px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(6,6,11,0.72);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      transition: transform 0.3s ease;
+    }
+    .nav-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.06em;
+      user-select: none;
+    }
+    .nav-links {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.82rem;
+      font-weight: 450;
+      color: var(--text-muted);
+      text-decoration: none;
+      letter-spacing: 0.01em;
+      transition: color 0.15s;
+      position: relative;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--text); }
+    .nav-links a.active::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0; right: 0;
+      height: 1px;
+      background: var(--accent);
+    }
+    .nav-cta {
+      margin-left: 12px;
+      padding: 6px 16px !important;
+      background: var(--accent-dim) !important;
+      border: 1px solid var(--accent-border);
+      color: var(--accent) !important;
+      border-radius: var(--rsm);
+      font-weight: 500 !important;
+      transition: background 0.15s, transform 0.08s !important;
+    }
+    .nav-cta:hover { background: rgba(77,142,245,0.18) !important; transform: translateY(-1px); }
+    .nav-cta.active::after { display: none; }
+
+    /* ============================================================
+       HERO
+    ============================================================ */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 120px 52px 100px;
+      max-width: 1120px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* radial spotlight */
+    .hero-glow {
+      position: absolute;
+      top: -300px; left: -400px;
+      width: 1000px; height: 1000px;
+      background: radial-gradient(circle at center, rgba(77,142,245,0.07) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .hero-glow-2 {
+      position: absolute;
+      top: 200px; right: -300px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle at center, rgba(48,212,152,0.04) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 14px 5px 10px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-bottom: 36px;
+      width: fit-content;
+    }
+    .live-dot {
+      width: 6px; height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      flex-shrink: 0;
+      animation: live-pulse 2s ease-in-out infinite;
+    }
+    @keyframes live-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(48,212,152,0.5); }
+      50%       { box-shadow: 0 0 0 5px rgba(48,212,152,0); }
+    }
+
+    .hero-name {
+      font-size: clamp(3.2rem, 7.5vw, 6rem);
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.02;
+      margin-bottom: 18px;
+    }
+
+    .hero-role-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: clamp(1rem, 2.2vw, 1.35rem);
+      color: var(--text-muted);
+      margin-bottom: 28px;
+    }
+    .role-arrow {
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9em;
+    }
+    #typewriter-text {
+      color: var(--text-muted);
+    }
+    .cursor {
+      display: inline-block;
+      width: 2px; height: 1.1em;
+      background: var(--accent);
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    .hero-bio {
+      font-size: 1rem;
+      color: var(--text-muted);
+      max-width: 560px;
+      line-height: 1.85;
+      margin-bottom: 44px;
+    }
+    .hero-bio strong { color: var(--text); font-weight: 600; }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 64px;
+      flex-wrap: wrap;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 550;
+      border-radius: var(--rsm);
+      padding: 10px 22px;
+      transition: all 0.15s;
+      cursor: pointer;
+      border: none;
+      letter-spacing: -0.01em;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-fill {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-fill:hover { background: #5c9bff; transform: translateY(-1px); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border-hover);
+    }
+    .btn-ghost:hover { border-color: var(--accent-border); color: var(--text); transform: translateY(-1px); }
+    .btn-icon-sq {
+      width: 40px; height: 40px; padding: 0;
+      justify-content: center;
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border-hover);
+    }
+    .btn-icon-sq:hover { border-color: var(--accent-border); color: var(--text); }
+
+    /* Stats strip */
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      width: fit-content;
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      overflow: hidden;
+      background: var(--border);
+      gap: 1px;
+    }
+    .stat-cell {
+      background: var(--surface);
+      padding: 18px 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .stat-val {
+      font-size: 1.55rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+    .stat-val em { color: var(--accent); font-style: normal; }
+    .stat-lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.66rem;
+      color: var(--text-dim);
+      letter-spacing: 0.04em;
+    }
+
+    /* Scroll hint */
+    .scroll-hint {
+      position: absolute;
+      bottom: 36px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      color: var(--text-dim);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      animation: hint-bob 2.8s ease-in-out infinite;
+    }
+    @keyframes hint-bob {
+      0%, 100% { opacity: 0.4; transform: translateX(-50%) translateY(0); }
+      50%       { opacity: 0.8; transform: translateX(-50%) translateY(7px); }
+    }
+    .chevron-down {
+      width: 14px; height: 14px;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: rotate(45deg);
+    }
+
+    /* ============================================================
+       ABOUT
+    ============================================================ */
+    #about {
+      padding: 96px 0 80px;
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 72px;
+      margin-top: 40px;
+      align-items: start;
+    }
+    .about-bio {
+      font-size: 1.0rem;
+      color: var(--text-muted);
+      line-height: 1.88;
+    }
+    .about-bio p + p { margin-top: 18px; }
+    .about-bio strong { color: var(--text); font-weight: 550; }
+    .about-bio .highlight {
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .about-cards {
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .interest-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 16px 20px;
+      display: flex; align-items: flex-start; gap: 14px;
+      transition: border-color 0.15s;
+    }
+    .interest-card:hover { border-color: var(--border-hover); }
+    .interest-icon { font-size: 1.3rem; line-height: 1; margin-top: 2px; }
+    .interest-title { font-size: 0.88rem; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+    .interest-desc  { font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; }
+
+    /* ============================================================
+       CHAPTER — company section opener
+    ============================================================ */
+    .chapter {
+      padding-top: 72px;
+    }
+    .chapter-header {
+      padding-bottom: 60px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 72px;
+      position: relative;
+    }
+    /* faint left rule */
+    .chapter-header::before {
+      content: '';
+      position: absolute;
+      left: -52px; top: 0; bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--accent-border) 20%, var(--accent-border) 80%, transparent);
+    }
+
+    .chapter-meta {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 20px;
+    }
+    .chapter-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.66rem;
+      color: var(--text-dim);
+      letter-spacing: 0.12em;
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 3px 11px;
+      border-radius: 100px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+    .badge-active {
+      background: var(--green-dim);
+      border: 1px solid var(--green-border);
+      color: var(--green);
+    }
+    .badge-past {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+    .badge-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: currentColor;
+    }
+    .badge-active .badge-dot { animation: live-pulse 2s ease-in-out infinite; }
+
+    .chapter-company {
+      font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.05;
+      margin-bottom: 6px;
+    }
+    .chapter-company .dim { color: var(--text-dim); font-weight: 300; }
+    .chapter-role-line {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+    .chapter-role-line .mono { font-size: 0.82rem; color: var(--text-dim); }
+    .chapter-desc {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      max-width: 620px;
+      line-height: 1.82;
+    }
+    .chapter-metrics {
+      display: flex; gap: 36px; margin-top: 28px; flex-wrap: wrap;
+    }
+    .cmetric-val {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+    .cmetric-lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      letter-spacing: 0.04em;
+    }
+
+    /* ============================================================
+       CASE STUDY
+    ============================================================ */
+    .cs {
+      margin-bottom: 88px;
+      padding-bottom: 88px;
+      border-bottom: 1px solid var(--border);
+    }
+    .cs:last-child { border-bottom: none; margin-bottom: 0; }
+
+    .cs-top {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 48px;
+      align-items: start;
+      margin-bottom: 40px;
+    }
+    .cs-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.66rem;
+      color: var(--text-dim);
+      letter-spacing: 0.12em;
+      margin-bottom: 10px;
+    }
+    .cs-title {
+      font-size: 1.55rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.22;
+      margin-bottom: 12px;
+    }
+    .cs-summary {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.78;
+      max-width: 580px;
+      margin-bottom: 16px;
+    }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag {
+      padding: 4px 11px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-size: 0.7rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    /* Impact block */
+    .cs-impact {
+      display: flex; flex-direction: column;
+      align-items: flex-end; text-align: right;
+      gap: 4px;
+      min-width: 160px;
+    }
+    .impact-big {
+      font-size: clamp(2.4rem, 4vw, 3.6rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--accent);
+      line-height: 1;
+    }
+    .impact-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      max-width: 180px;
+    }
+    .impact-sub .dim { color: var(--text-dim); font-size: 0.72rem; }
+
+    /* Narrative 3-col */
+    .narrative {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .narr-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 18px 20px;
+    }
+    .narr-lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.63rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+    .narr-text {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.72;
+    }
+
+    /* Callout */
+    .callout {
+      background: var(--accent-dim);
+      border: 1px solid var(--accent-border);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--rsm);
+      padding: 15px 20px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+      margin-bottom: 32px;
+    }
+    .callout strong { color: var(--accent); font-weight: 600; }
+
+    /* ============================================================
+       PHONE FRAMES
+    ============================================================ */
+    .shots-grid {
+      display: grid;
+      gap: 14px;
+    }
+    .shots-2 { grid-template-columns: repeat(2, 1fr); }
+    .shots-3 { grid-template-columns: repeat(3, 1fr); }
+    .shots-4 { grid-template-columns: repeat(4, 1fr); }
+
+    .phone {
+      border-radius: 26px;
+      overflow: hidden;
+      background: #090912;
+      border: 1.5px solid rgba(255,255,255,0.09);
+      box-shadow:
+        0 0 0 1px rgba(0,0,0,0.6),
+        0 24px 64px rgba(0,0,0,0.55),
+        inset 0 1px 0 rgba(255,255,255,0.05);
+      aspect-ratio: 9 / 19.5;
+      display: flex; flex-direction: column;
+      position: relative;
+    }
+    /* notch bar */
+    .phone::before {
+      content: '';
+      position: absolute;
+      top: 9px; left: 50%;
+      transform: translateX(-50%);
+      width: 56px; height: 4px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 2px;
+      z-index: 2;
+    }
+    .phone-screen {
+      flex: 1;
+      overflow: hidden;
+      display: flex; align-items: flex-start;
+    }
+    .phone-screen img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+    }
+
+    /* Caption */
+    .shot-cap {
+      text-align: center;
+      margin-top: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
+    }
+
+    /* ============================================================
+       SKILLS
+    ============================================================ */
+    #skills {
+      padding: 96px 0;
+      border-top: 1px solid var(--border);
+    }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 44px;
+    }
+    .skill-group {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 22px 24px;
+      transition: border-color 0.15s;
+    }
+    .skill-group:hover { border-color: var(--border-hover); }
+    .sg-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.66rem;
+      color: var(--text-dim);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .chips { display: flex; flex-wrap: wrap; gap: 7px; }
+    .chip {
+      padding: 5px 12px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      transition: all 0.15s;
+      cursor: default;
+    }
+    .chip:hover { border-color: var(--accent-border); color: var(--text); transform: translateY(-1px); }
+    .chip-primary {
+      background: var(--accent-dim);
+      border-color: var(--accent-border);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .chip-primary:hover { background: rgba(77,142,245,0.18); }
+
+    /* ============================================================
+       CONTACT
+    ============================================================ */
+    #contact {
+      padding: 120px 0;
+      border-top: 1px solid var(--border);
+    }
+    .contact-inner {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .contact-headline {
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.12;
+      margin-bottom: 14px;
+      margin-top: 24px;
+    }
+    .contact-sub {
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-bottom: 48px;
+      line-height: 1.7;
+    }
+    .contact-actions {
+      display: flex; justify-content: center;
+      gap: 10px; flex-wrap: wrap;
+    }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    footer {
+      padding: 22px 52px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      color: var(--text-dim);
+    }
+
+    /* ============================================================
+       REVEAL ANIMATIONS (JS-driven)
+    ============================================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.38s cubic-bezier(0.16,1,0.3,1),
+                  transform 0.38s cubic-bezier(0.16,1,0.3,1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* stagger children */
+    .stagger > * {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.32s cubic-bezier(0.16,1,0.3,1),
+                  transform 0.32s cubic-bezier(0.16,1,0.3,1);
+    }
+    .stagger.visible > * { opacity: 1; transform: translateY(0); }
+    .stagger.visible > *:nth-child(1) { transition-delay: 0.00s; }
+    .stagger.visible > *:nth-child(2) { transition-delay: 0.06s; }
+    .stagger.visible > *:nth-child(3) { transition-delay: 0.12s; }
+    .stagger.visible > *:nth-child(4) { transition-delay: 0.18s; }
+    .stagger.visible > *:nth-child(5) { transition-delay: 0.24s; }
+    .stagger.visible > *:nth-child(6) { transition-delay: 0.30s; }
+
+    /* counter rollup */
+    .rollup { font-variant-numeric: tabular-nums; }
+
+    /* horizontal divider */
+    .divider {
+      width: 36px; height: 2px;
+      background: var(--accent);
+      border-radius: 1px;
+      margin: 24px 0;
+    }
+
+    /* ============================================================
+       IMPACT BADGE row (used inside case studies)
+    ============================================================ */
+    .impact-pills {
+      display: flex; flex-wrap: wrap; gap: 7px;
+      margin-top: 14px;
+    }
+    .ipill {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 12px;
+      background: var(--green-dim);
+      border: 1px solid var(--green-border);
+      border-radius: 100px;
+      font-size: 0.7rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--green);
+    }
+
+    /* ============================================================
+       SECTION separator  (faint full-width line + label)
+    ============================================================ */
+    .section-sep {
+      display: flex; align-items: center; gap: 16px;
+      margin-bottom: 56px;
+    }
+    .section-sep-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* sub-cs (within dozee home) */
+    .sub-cs {
+      margin-bottom: 56px;
+      padding-bottom: 56px;
+      border-bottom: 1px dashed var(--border);
+    }
+    .sub-cs:last-child { border-bottom: none; margin-bottom: 0; }
+    .sub-cs-title {
+      font-size: 1.1rem;
+      font-weight: 650;
+      letter-spacing: -0.015em;
+      margin-bottom: 8px;
+    }
+
+    /* ============================================================
+       MOBILE / RESPONSIVE
+    ============================================================ */
+    @media (max-width: 768px) {
+      .wrap { padding: 0 24px; }
+      nav { padding: 0 24px; }
+      #hero { padding: 100px 24px 80px; }
+      .hero-stats { grid-template-columns: repeat(2,1fr); }
+      .about-grid { grid-template-columns: 1fr; gap: 40px; }
+      .chapter-header::before { display: none; }
+      .cs-top { grid-template-columns: 1fr; gap: 24px; }
+      .cs-impact { align-items: flex-start; text-align: left; }
+      .narrative { grid-template-columns: 1fr; }
+      .shots-4, .shots-3 { grid-template-columns: repeat(2,1fr); }
+      .skills-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 6px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div id="progress"></div>
+
+<!-- ============================================================
+     NAV
+============================================================ -->
+<nav id="navbar">
+  <span class="nav-logo">AV</span>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#digii">Digii</a></li>
+    <li><a href="#dozee">Dozee</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ============================================================
+     HERO
+============================================================ -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow-2"></div>
+
+  <div class="hero-badge">
+    <span class="live-dot"></span>
+    <span>senior android engineer &middot; open to opportunities</span>
+  </div>
+
+  <h1 class="hero-name gradient-name">Abhishek<br/>Verma</h1>
+
+  <div class="hero-role-line">
+    <span class="role-arrow mono">&rarr;</span>
+    <span id="typewriter-text">Senior Android Engineer</span><span class="cursor"></span>
+  </div>
+
+  <p class="hero-bio">
+    4+ years building Android products used by <strong>500k+ students and healthcare workers</strong> across India.
+    I work at the intersection of platform reliability, mobile architecture, and product quality &mdash;
+    from ERP systems to hospital-grade ECG devices.
+  </p>
+
+  <div class="hero-actions">
+    <a href="#digii" class="btn btn-fill">Read my story &darr;</a>
+    <a href="#" class="btn btn-ghost">Download CV</a>
+    <a href="#" class="btn btn-ghost btn-icon-sq" title="GitHub" aria-label="GitHub">
+      <!-- GitHub SVG -->
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+      </svg>
+    </a>
+    <a href="#" class="btn btn-ghost btn-icon-sq" title="LinkedIn" aria-label="LinkedIn">
+      <!-- LinkedIn SVG -->
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+      </svg>
+    </a>
+  </div>
+
+  <!-- Stats strip -->
+  <div class="hero-stats stagger" id="stats-strip">
+    <div class="stat-cell">
+      <span class="stat-val rollup" data-target="99.92" data-suffix="%" data-decimals="2">0%</span>
+      <span class="stat-lbl">crash-free</span>
+    </div>
+    <div class="stat-cell">
+      <span class="stat-val rollup" data-target="500" data-suffix="k+">0</span>
+      <span class="stat-lbl">active users</span>
+    </div>
+    <div class="stat-cell">
+      <span class="stat-val rollup" data-target="4" data-suffix="+&nbsp;yrs">0</span>
+      <span class="stat-lbl">experience</span>
+    </div>
+    <div class="stat-cell">
+      <span class="stat-val rollup" data-target="4.5" data-suffix="&#9733;" data-decimals="1">0</span>
+      <span class="stat-lbl">play store</span>
+    </div>
+  </div>
+
+  <div class="scroll-hint" aria-hidden="true">
+    <span>scroll</span>
+    <div class="chevron-down"></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     ABOUT
+============================================================ -->
+<section id="about">
+  <div class="wrap">
+    <span class="section-eyebrow">// about</span>
+    <div class="about-grid reveal">
+      <div class="about-bio">
+        <p>
+          I'm a senior Android engineer who ships products that matter at scale.
+          Over 4 years I've worked across two very different domains &mdash;
+          <strong>B2B SaaS ERP</strong> for Indian colleges and <strong>medical-grade hardware</strong> for patient vitals monitoring &mdash;
+          and the craft that unifies both is the same: <span class="highlight">build it fast, keep it stable, measure everything</span>.
+        </p>
+        <p>
+          My work is the unglamorous kind that makes a real difference: pulling crash-free sessions from 97.4% to 99.92%,
+          migrating a legacy Java codebase without breaking production, shaving 3 seconds off a chart load that was already "acceptable."
+          I don't just fix symptoms; I instrument, find root causes, and document the before/after.
+        </p>
+        <p>
+          Currently at <span class="highlight">Digii</span> (formerly CollPoll) as Product Engineer III,
+          owning the Android platform across academics, hostel, payments, and access control modules
+          serving 500k+ college students.
+        </p>
+      </div>
+      <div class="about-cards stagger">
+        <div class="interest-card">
+          <span class="interest-icon">&#129354;</span>
+          <div>
+            <div class="interest-title">MMA &amp; Combat Sports</div>
+            <div class="interest-desc">Discipline, pattern recognition, getting hit and recovering fast.</div>
+          </div>
+        </div>
+        <div class="interest-card">
+          <span class="interest-icon">&#128200;</span>
+          <div>
+            <div class="interest-title">Personal Investing</div>
+            <div class="interest-desc">Long-term compounding over short-term noise. Same philosophy as software architecture.</div>
+          </div>
+        </div>
+        <div class="interest-card">
+          <span class="interest-icon">&#128241;</span>
+          <div>
+            <div class="interest-title">Android Platform Nerd</div>
+            <div class="interest-desc">Follows every Compose, ART, and AndroidX release note with genuine enthusiasm.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     CHAPTER 01 — DIGII
+============================================================ -->
+<section id="digii" class="chapter">
+  <div class="wrap">
+
+    <div class="chapter-header reveal">
+      <div class="chapter-meta">
+        <span class="chapter-num mono">CHAPTER 01</span>
+        <span class="badge badge-active">
+          <span class="badge-dot"></span>
+          Current Role
+        </span>
+      </div>
+      <h2 class="chapter-company">
+        Digii <span class="dim">/ formerly CollPoll</span>
+      </h2>
+      <p class="chapter-role-line">
+        Product Engineer III &nbsp;&middot;&nbsp;
+        <span class="mono">Oct 2023 &rarr; Present &nbsp;&nbsp;(2.5 yrs) &nbsp;&middot;&nbsp; Remote</span>
+      </p>
+      <p class="chapter-desc">
+        Digii is a B2B SaaS ERP platform delivered to Indian higher-education institutions &mdash;
+        academics, payments, hostel management, campus access control, and learning modules.
+        I own the Android platform: architecture, performance, observability, and new feature delivery
+        across modules used daily by 500k+ students.
+      </p>
+      <div class="chapter-metrics stagger">
+        <div>
+          <div class="cmetric-val">99.92%</div>
+          <div class="cmetric-lbl">crash-free sessions</div>
+        </div>
+        <div>
+          <div class="cmetric-val">500k+</div>
+          <div class="cmetric-lbl">active users</div>
+        </div>
+        <div>
+          <div class="cmetric-val">&minus;80%</div>
+          <div class="cmetric-lbl">CI/CD build time</div>
+        </div>
+        <div>
+          <div class="cmetric-val">&minus;99%</div>
+          <div class="cmetric-lbl">storage waste</div>
+        </div>
+        <div>
+          <div class="cmetric-val">4.5&#9733;</div>
+          <div class="cmetric-lbl">Play Store rating</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CS 01: Flutter Integration ── -->
+    <div class="cs reveal" id="cs1">
+      <div class="cs-top">
+        <div>
+          <div class="cs-num mono">01 &mdash; FLUTTER INTEGRATION &amp; CI/CD</div>
+          <h3 class="cs-title">Embedding Flutter in a Native Android App&mdash;Zero Cold-Start Cost</h3>
+          <p class="cs-summary">
+            Access Management screens arrived from a separate Flutter team.
+            The mandate: integrate them into our existing Android app without impacting cold start time,
+            support 3 build flavors (debug / qa / release), and don&rsquo;t blow up CI build times.
+            What sounds like a routine library integration turned into a full engine lifecycle and CI pipeline problem.
+          </p>
+          <div class="tags">
+            <span class="tag">Flutter Engine</span>
+            <span class="tag">AAR Library</span>
+            <span class="tag">GitHub Actions</span>
+            <span class="tag">Firebase App Distribution</span>
+            <span class="tag">Kotlin Channels</span>
+            <span class="tag">Flavor management</span>
+          </div>
+          <div class="impact-pills">
+            <span class="ipill">&#10003;&nbsp; 4s cold start &rarr; negligible</span>
+            <span class="ipill">&#10003;&nbsp; 90 min CI &rarr; 18 min</span>
+          </div>
+        </div>
+        <div class="cs-impact">
+          <div class="impact-big">&minus;80%</div>
+          <div class="impact-sub">CI/CD build time<br/><span class="dim">90 min &rarr; 18 min</span></div>
+          <div style="margin-top:20px;">
+            <div class="impact-big" style="font-size:2.2rem;">~0s</div>
+            <div class="impact-sub">Flutter screen startup<br/><span class="dim">was 4s cold</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="narrative stagger">
+        <div class="narr-card">
+          <div class="narr-lbl">Problem</div>
+          <div class="narr-text">
+            Flutter engine needs ~4s to initialize cold. Each build flavor required its own AAR artifact,
+            meaning the CI pipeline was compiling Flutter 3&times; per build cycle, pushing total time to 90 minutes.
+            Integrating late also meant user tokens and auth details needed to be passed across a native-to-Flutter boundary.
+          </div>
+        </div>
+        <div class="narr-card">
+          <div class="narr-lbl">Solution</div>
+          <div class="narr-text">
+            Pre-warmed the Flutter engine on a background thread during Home Page load.
+            Built a state manager (loading &rarr; ready &rarr; error) to gate navigation.
+            Passed tokens and user details via platform channels.
+            Pre-built flavor-specific AAR artifacts and published as an internal library so CI just pulls it &mdash; no recompile.
+          </div>
+        </div>
+        <div class="narr-card">
+          <div class="narr-lbl">Impact</div>
+          <div class="narr-text">
+            Screen display time: 4s &rarr; negligible.
+            CI build + deploy to Firebase App Distribution: 90 min &rarr; 18 min.
+            Zero cold-start regression. Works seamlessly across all 3 flavors.
+            Developers iterate faster; QA no longer blocked by CI waits.
+          </div>
+        </div>
+      </div>
+
+      <div class="shots-grid shots-3 stagger">
+        <div>
+          <div class="phone">
+            <div class="phone-screen">
+              <img src="../screen_shots/digii/Group_1_Access_Management_Dasboard_flutter_1.jpg" alt="Access Management Dashboard" loading="lazy" />
+            </div>
+          </div>
+          <div class="shot-cap">Dashboard</div>
+        </div>
+        <div>
+          <div class="phone">
+            <div class="phone-screen">
+              <img src="../screen_shots/digii/Group_1_Access_Management_Dasboard_flutter_2.jpg" alt="Access Dashboard 2" loading="lazy" />
+            </div>
+          </div>
+          <div class="shot-cap">Access List</div>
+        </div>
+        <div>
+          <div class="phone">
+            <div class="phone-screen">
+              <img src="../screen_shots/digii/Group_1Access_Management_Pass_Console_flutter.jpg" alt="Pass Console" loading="lazy" />
+            </div>
+          </div>
+          <div class="shot-cap">Pass Console</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CS 02: Face Liveness ── -->
+    <div class="cs reveal" id="cs2">
+      <div class="cs-top">
+        <div>
+          <div class="cs-num mono">02 &mdash; ANTI-SPOOFING ATTENDANCE</div>
+          <h3 class="cs-title">Liveness Detection to End Proxy Attendance</h3>
+          <p class="cs-summary">
+            Faculty were marking attendance by logging into other accounts and scanning printed photographs &mdash;
+            completely bypassing physical campus presence.
+            I identified the problem, built the solution case (PUC), presented it to stakeholders,
+            and shipped it end-to-end using ML Kit with randomized challenge-response verification.
+          </p>
+          <div class="tags">
+            <span class="tag">ML Kit Face Detection</span>
+            <span class="tag">Liveness Challenges</span>
+            <span class="tag">Geolocation verification</span>
+            <span class="tag">Static IP check</span>
+            <span class="tag">Kotlin</span>
+          </div>
+          <div class="impact-pills">
+            <span class="ipill">&#10003;&nbsp; Photo spoofing: eliminated</span>
+            <span class="ipill">&#10003;&nbsp; PUC-driven delivery</span>
+          </div>
+        </div>
+        <div class="cs-impact">
+          <div class="impact-big">0</div>
+          <div class="impact-sub">proxy attendance possible<br/><span class="dim">post-deployment</span></div>
+        </div>
+      </div>
+
+      <div class="narrative stagger">
+        <div class="narr-card">
+          <div class="narr-lbl">Problem</div>
+          <div class="narr-text">
+            Faculty could authenticate as any user, then hold a photo up to the camera to mark attendance.
+            No liveness signal existed. Physical campus presence was completely unverifiable.
+          </div>
+        </div>
+        <div class="narr-card">
+          <div class="narr-lbl">Solution</div>
+          <div class="narr-text">
+            Random head-turn challenges (2 of 4 directions), 2&times; blink requirement, single-person enforcement via ML Kit.
+            Random frames captured during the flow, sent server-side for verification against saved photo,
+            user&rsquo;s geolocation, and registered static IP.
+          </div>
+        </div>
+        <div class="narr-card">
+          <div class="narr-lbl">Impact</div>
+          <div class="narr-text">
+            Proxy attendance via photo: fully eliminated.
+            Challenge randomization prevents replay attacks.
+            Stakeholder buy-in secured via PUC presentation before a single line of code was written &mdash;
+            smooth rollout, zero rollback.
+          </div>
+        </div>
+      </div>
+
+      <div class="shots-grid shots-4 stagger">
+        <div>
+          <div class="phone">
+            <div class="phone-screen">
+              <img src="../screen_shots/digii/Group_2_Faculty_Attendance_Face_Scanner_1.jpg" alt="Face Scanner" loading="lazy" />
+            </div>
+          </div>
+          <div class="shot-cap">Camera preview</div>
+        </div>
+        <div>
+          <div class="phone">
+            <div class="phone-screen">
+              <img src="../screen_shots/digii/Group_2_Faculty_Attendance_Face_Scanner_2.jpg" alt="Face Scanner 2" loading="lazy" />
+            </div>
+          </div>
+          <div class="shot-cap">Head-turn challenge</div>
+        </div>
+        <div>
+          <div class="phone">
+            <div class="phone-screen">
+              <img src="../screen_shots/digii/Group_2_Faculty_Attendance_Check_Pass.jpg" alt="Check Pass" loading="lazy" />
+            </div>
+          </div>
+          <div class="shot-cap">Verification pass</div>
+        </div>
+        <div>
+          <div class="phone">
+            <div class="phone-screen">
+              <img src="../screen_shots/digii/Group_2_Faculty_Attendance_Check_Failed.jpg" alt="Check Failed" loading="lazy" />
+            </div>
+          </div>
+          <div class="shot-cap">Verification failed</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CS 03: Compose Migration ── -->
+    <div class="cs reveal" id="cs3">
+      <div class="cs-top">
+        <div>
+          <div class="cs-num mono">03 &mdash; JETPACK COMPOSE MIGRATION</div>
+          <h3 class="cs-title">Dragging a Legacy Java Codebase into the Compose Era</h3>
+          <p class="cs-summary">
+            Legacy Java. Outdated Gradle. ButterKnife scattered across 100+ files.
+            Three critical libraries had vanished from Maven Central, JitPack, and JFrog alike.
+            I migrated the entire Android build system from the ground up &mdash; and in doing so,
+            unlocked Compose, Kotlin 2+, Coroutines, and Flow for the whole team.
+          </p>
+          <div class="tags">
+            <span class="tag">Jetpack Compose</span>
+            <span class="tag">Kotlin 2+</span>
+            <span class="tag">Coroutines &amp; Flow</span>
+            <span class="tag">Gradle upgrade</span>
+            <span class="tag">ButterKnife removal</span>
+            <span class="tag">Internal AAR libraries</span>
+          </div>
+          <div class="impact-pills">
+            <span class="ipill">&#10003;&nbsp; Dev time &minus;20%</span>
+            <span class="ipill">&#10003;&nbsp; UI testing time &minus;15%</span>
+            <span class="ipill">&#10003;&nbsp; Kotlin 2+ unlocked</span>
+          </div>
+        </div>
+        <div class="cs-impact">
+          <div class="impact-big">&minus;20%</div>
+          <div class="impact-sub">feature dev time<br/><span class="dim">via composable reuse</span></div>
+          <div style="margin-top:16px;">
+            <div class="impact-big" style="font-size:2.2rem;">&minus;15%</div>
+            <div class="impact-sub">UI testing time</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>The missing libraries problem:</strong> Three unmaintained libraries couldn&rsquo;t be found on any public registry.
+        I cloned each from GitHub, built them as internal AAR packages, and hosted them in our own internal repo &mdash;
+        so we own the maintenance path and future upgrades.
+      </div>
+
+      <div class="narrative stagger">
+        <div class="narr-card">
+          <div class="narr-lbl">Problem</div>
+          <div class="narr-text">
+            Outdated Java + Gradle blocked Kotlin 2+ and Compose.
+            ButterKnife in 100+ files. 3 libraries with no available source on any public registry.
+            Any upgrade risked breaking the entire build.
+          </div>
+        </div>
+        <div class="narr-card">
+          <div class="narr-lbl">Solution</div>
+          <div class="narr-text">
+            Upgraded Java, Gradle, and Android SDKs incrementally.
+            Manually migrated all ButterKnife bindings across 100+ files.
+            Built and published the 3 missing libraries as internal AARs.
+            Full Kotlin 2+ + Compose + Coroutines support unlocked.
+          </div>
+        </div>
+        <div class="narr-card">
+          <div class="narr-lbl">Impact</div>
+          <div class="narr-text">
+            Dev time per feature: &minus;20% via composable reuse.
+            UI testing time: &minus;15%.
+            Lifecycle correctness enforced via structured concurrency.
+            Low-end device support improved significantly.
+          </div>
+        </div>
+      </div>
+
+      <div class="shots-grid shots-3 stagger">
+        <div>
+          <div class="phone">
+            <div class="phone-screen">
+              <img src="../screen_shots/digii/Group_3_Hostel_Attendance_first_compose_migration_1.jpg" alt="Hostel Compose 1" loading="lazy" />
+            </div>
+          </div>
+          <div class="shot-cap">Hostel list (Compose)</div>
+        </div>
+        <div>
+          <div class="phone">
+            <div class="phone-screen">
+              <img src="../screen_shots/digii/Group_3_Hostel_Attendance_Taking.jpg" alt="Hostel Attendance Taking" loading="lazy" />
+            </div>
+          </div>
+          <div class="shot-cap">Mark attendance</div>
+        </div>
+        <div>
+          <div class="phone">
+            <div class="phone-screen">
+              <img src="../screen_shots/digii/Group_3_Hostel_Attendance_Report_first_compose_migration.jpg" alt="Hostel Report" loading="lazy" />
+            </div>
+          </div>
+          <div class="shot-cap">Attendance report</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CS 04: Payments UX ── -->
+    <div class="cs reveal" id="cs4">
+      <div class="cs-top">
+        <div>
+          <div class="cs-num mono">04 &mdash; PAYMENTS UX OVERHAUL</div>
+          <h3 class="cs-title">Turning Ambiguous Requirements into a Student&rsquo;s Financial Dashboard</h3>
+          <p class="cs-summary">
+            Received requirements that didn&rsquo;t map to coherent UX.
+            Instead of building what was described, I drove alignment across product, design, and backend teams.
+            The result: a redesigned experience where students see their complete financial status at a single glance,
+            with minimal API calls and near-instant repeat loading.
+          </p>
+          <div class="tags">
+            <span class="tag">Parallel API calls</span>
+            <span class="tag">State caching</span>
+            <span class="tag">API contract design</span>
+            <span class="tag">Cross-team alignment</span>
+            <span class="tag">Kotlin Coroutines</span>
+          </div>
+          <div class="impact-pills">
+            <span class="ipill">&#10003;&nbsp; 1 screen replaces 4+ screens</span>
+            <span class="ipill">&#10003;&nbsp; Redundant API calls eliminated</span>
+          </div>
+        </div>
+        <div class="cs-impact">
+          <div class="impact-big">1</div>
+          <div class="impact-sub">screen for full fee status<br/><span class="dim">was 4+ separate screens</span></div>
+        </div>
+      </div>
+
+      <div class="narrative stagger">
+        <div class="narr-card">
+          <div class="narr-lbl">Problem</div>
+          <div class="narr-text">
+            Requirements were ambiguous and UX-incoherent.
+            Data spread across 4+ screens. Multiple redundant API calls fired every time the user returned from a sub-screen.
+            Students couldn&rsquo;t see their full fee picture without navigating everywhere.
+          </div>
+        </div>
+        <div class="narr-card">
+          <div class="narr-lbl">Solution</div>
+          <div class="narr-text">
+            Drove cross-team alignment. Redesigned the API response contract with backend to deliver consolidated data in a single call.
+            Parallelized all independent API calls with Coroutines.
+            Cached state to prevent redundant fetches on back-navigation.
+          </div>
+        </div>
+        <div class="narr-card">
+          <div class="narr-lbl">Impact</div>
+          <div class="narr-text">
+            Full fee status at a glance.
+            Redundant API calls eliminated.
+            Time-to-information on the payments screen reduced to near-instant on repeat visits.
+            Positive reception from both students and college admins.
+          </div>
+        </div>
+      </div>
+
+      <div class="shots-grid shots-2 stagger">
+        <div>
+          <div class="phone">
+            <div class="phone-screen">
+              <img src="../screen_shots/digii/Group_4_Payments_Consolidated.jpg" alt="Payments Consolidated" loading="lazy" />
+            </div>
+          </div>
+          <div class="shot-cap">Consolidated overview</div>
+        </div>
+        <div>
+          <div class="phone">
+            <div class="phone-screen">
+              <img src="../screen_shots/digii/Group_4_Payments_Additional.jpg" alt="Payments Additional" loading="lazy" />
+            </div>
+          </div>
+          <div class="shot-cap">Fee breakdown</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CS 05: Multi-tenant ── -->
+    <div class="cs reveal" id="cs5">
+      <div class="cs-top">
+        <div>
+          <div class="cs-num mono">05 &mdash; MULTI-TENANT ACCOUNT SWITCH</div>
+          <h3 class="cs-title">Seamless Identity Switching for Multi-Role Campus Users</h3>
+          <p class="cs-summary">
+            An MTech student who is also a faculty member and hostel warden had to fully log out and log back in
+            every time they switched roles. The fix required coordinating token invalidation, async cache clearing,
+            Room DB upload, Retrofit client recreation, and a full rollback mechanism &mdash; all as a single atomic operation.
+          </p>
+          <div class="tags">
+            <span class="tag">Coroutines (synchronous async)</span>
+            <span class="tag">Room DB</span>
+            <span class="tag">Retrofit</span>
+            <span class="tag">Token management</span>
+            <span class="tag">Feature flags</span>
+            <span class="tag">Atomic state transitions</span>
+          </div>
+          <div class="impact-pills">
+            <span class="ipill">&#10003;&nbsp; 1-tap account switch</span>
+            <span class="ipill">&#10003;&nbsp; Full rollback on failure</span>
+            <span class="ipill">&#10003;&nbsp; Zero stale-data state</span>
+          </div>
+        </div>
+        <div class="cs-impact">
+          <div class="impact-big" style="font-size:2.8rem;">1-tap</div>
+          <div class="impact-sub">account context switch<br/><span class="dim">was: logout + re-login</span></div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>Pipeline complexity:</strong>
+        Upload pending Room DB data &rarr; invalidate old token &rarr; clear cache &amp; persistent storage (made synchronous) &rarr;
+        fetch new token &rarr; update user model globally &rarr; reinitialize Retrofit service with new credentials &rarr;
+        refresh feature flags per account &rarr; sync new account data.
+        Every stage has a named failure mode: sync failure, expired password, partial rollback, stale-data prevention.
+      </div>
+
+      <div class="narrative stagger">
+        <div class="narr-card">
+          <div class="narr-lbl">Problem</div>
+          <div class="narr-text">
+            Multi-role users had to fully logout and re-login to switch context &mdash; every time.
+            Token invalidation, cache clearing, data sync, and Retrofit re-init all had to happen atomically
+            with no stale state left behind.
+          </div>
+        </div>
+        <div class="narr-card">
+          <div class="narr-lbl">Solution</div>
+          <div class="narr-text">
+            Sequential async pipeline with explicit synchronization points.
+            Made cache-clearing synchronous where required.
+            Full rollback to previous account on any stage failure.
+            Named error states for each failure mode with appropriate user messaging.
+          </div>
+        </div>
+        <div class="narr-card">
+          <div class="narr-lbl">Impact</div>
+          <div class="narr-text">
+            1-tap context switch for all multi-role users.
+            Zero stale data after switch.
+            Graceful, informative error states (sync failed, expired password, rollback confirmation).
+            Feature flags correctly scoped per active account.
+          </div>
+        </div>
+      </div>
+
+      <div class="shots-grid shots-3 stagger">
+        <div>
+          <div class="phone">
+            <div class="phone-screen">
+              <img src="../screen_shots/digii/Group_5_Tenant_switch.jpg" alt="Tenant Switch" loading="lazy" />
+            </div>
+          </div>
+          <div class="shot-cap">Account selector</div>
+        </div>
+        <div>
+          <div class="phone">
+            <div class="phone-screen">
+              <img src="../screen_shots/digii/Group_5_Tenant_Swtich_Add.jpg" alt="Add Account" loading="lazy" />
+            </div>
+          </div>
+          <div class="shot-cap">Add account</div>
+        </div>
+        <div>
+          <div class="phone">
+            <div class="phone-screen">
+              <img src="../screen_shots/digii/Group_5_Tenant_Swtich_Add_Details.jpg" alt="Account Details" loading="lazy" />
+            </div>
+          </div>
+          <div class="shot-cap">Account details</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /wrap -->
+</section>
+
+
+<!-- ============================================================
+     CHAPTER 02 — DOZEE
+============================================================ -->
+<section id="dozee" class="chapter" style="padding-top: 64px;">
+  <div class="wrap">
+
+    <div class="chapter-header reveal">
+      <div class="chapter-meta">
+        <span class="chapter-num mono">CHAPTER 02</span>
+        <span class="badge badge-past">
+          <span class="badge-dot"></span>
+          2021 &ndash; 2023
+        </span>
+      </div>
+      <h2 class="chapter-company">Dozee</h2>
+      <p class="chapter-role-line">
+        Software Engineer II &nbsp;&middot;&nbsp;
+        <span class="mono">Jun 2021 &rarr; Oct 2023 &nbsp;&nbsp;(2 yrs) &nbsp;&middot;&nbsp; Bengaluru</span>
+      </p>
+      <p class="chapter-desc">
+        Dozee is a medical hardware company building contactless vitals-monitoring devices &mdash;
+        tracking SPO&#8322;, heart rate, breath rate, respiration, and sleep quality.
+        I built two Android/React Native applications: the consumer-facing sleep monitoring home app
+        and a hospital-grade ECG app created entirely from scratch.
+      </p>
+      <div class="chapter-metrics stagger">
+        <div>
+          <div class="cmetric-val">99%</div>
+          <div class="cmetric-lbl">BLE connection rate</div>
+        </div>
+        <div>
+          <div class="cmetric-val">&minus;3s</div>
+          <div class="cmetric-lbl">chart load time</div>
+        </div>
+        <div>
+          <div class="cmetric-val">70%+</div>
+          <div class="cmetric-lbl">test coverage</div>
+        </div>
+        <div>
+          <div class="cmetric-val">&minus;4 MB</div>
+          <div class="cmetric-lbl">data per session</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOZEE HOME APP -->
+    <div class="cs reveal" id="cs-home">
+      <div class="cs-num mono" style="margin-bottom:10px;">DOZEE HOME APP &mdash; Sleep Monitoring</div>
+      <h3 class="cs-title" style="margin-bottom:40px;">Charts, BLE Pod Management &amp; Multi-Profile Switching</h3>
+
+      <!-- A: Charts -->
+      <div class="sub-cs">
+        <div class="cs-top">
+          <div>
+            <div class="cs-num mono" style="color:var(--accent);">A &mdash; Chart Performance</div>
+            <h4 class="sub-cs-title">9,000+ Sleep Data Points Rendered in Under 2 Seconds</h4>
+            <p class="cs-summary" style="font-size:0.87rem;">
+              8 hours of sleep = 4 data points/minute = 1,920+ raw points per session. Original render: ~5 seconds.
+              I helped the owning developer profile and fix the rendering pipeline, applying a smoothing algorithm,
+              invalid-point filtering, WatermelonDB caching, background prefetch, and chart axis label math to handle every screen size.
+            </p>
+            <div class="tags">
+              <span class="tag">React Native</span>
+              <span class="tag">WatermelonDB</span>
+              <span class="tag">React.memo</span>
+              <span class="tag">useEffect optimization</span>
+              <span class="tag">Data smoothing algo</span>
+              <span class="tag">Chart axis layout</span>
+            </div>
+          </div>
+          <div class="cs-impact">
+            <div class="impact-big">&minus;60%</div>
+            <div class="impact-sub">chart render time<br/><span class="dim">5s &rarr; &lt;2s</span></div>
+          </div>
+        </div>
+        <div class="shots-grid shots-4 stagger">
+          <div>
+            <div class="phone">
+              <div class="phone-screen">
+                <img src="../screen_shots/Dozee/home/group_1_chart_1.png" alt="Chart 1" loading="lazy" />
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="phone">
+              <div class="phone-screen">
+                <img src="../screen_shots/Dozee/home/group_1_chart_2.png" alt="Chart 2" loading="lazy" />
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="phone">
+              <div class="phone-screen">
+                <img src="../screen_shots/Dozee/home/group_1_chart_3.png" alt="Chart 3" loading="lazy" />
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="phone">
+              <div class="phone-screen">
+                <img src="../screen_shots/Dozee/home/group_1_chart_4.png" alt="Chart 4" loading="lazy" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B: Health Summary + BLE -->
+      <div class="sub-cs">
+        <div class="cs-top">
+          <div>
+            <div class="cs-num mono" style="color:var(--accent);">B &mdash; Health Summary &amp; BLE Pod</div>
+            <h4 class="sub-cs-title">99% BLE Connection Rate via State Machine &amp; Smart Retry</h4>
+            <p class="cs-summary" style="font-size:0.87rem;">
+              The home screen drives a BLE-connected health monitoring pod.
+              Built a connection state machine with retry logic for WiFi pairing via BLE handshake.
+              Color-coded real-time feedback on connection health.
+              Health summary cards surface historical nightly data.
+            </p>
+            <div class="tags">
+              <span class="tag">BLE (Coroutines)</span>
+              <span class="tag">WiFi provisioning</span>
+              <span class="tag">Connection state machine</span>
+              <span class="tag">React Native</span>
+            </div>
+          </div>
+          <div class="cs-impact">
+            <div class="impact-big">99%</div>
+            <div class="impact-sub">BLE connection<br/>success rate</div>
+          </div>
+        </div>
+        <div class="shots-grid shots-3 stagger">
+          <div>
+            <div class="phone">
+              <div class="phone-screen">
+                <img src="../screen_shots/Dozee/home/group_2_home_mock5.png" alt="Health Summary" loading="lazy" />
+              </div>
+            </div>
+            <div class="shot-cap">Health summary</div>
+          </div>
+          <div>
+            <div class="phone">
+              <div class="phone-screen">
+                <img src="../screen_shots/Dozee/home/group_4_home_mock.png" alt="Home Pod" loading="lazy" />
+              </div>
+            </div>
+            <div class="shot-cap">Pod connection</div>
+          </div>
+          <div>
+            <div class="phone">
+              <div class="phone-screen">
+                <img src="../screen_shots/Dozee/home/home_screen_1.png" alt="Home Screen" loading="lazy" />
+              </div>
+            </div>
+            <div class="shot-cap">Home screen</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- C: Profile Switch -->
+      <div class="sub-cs">
+        <div class="cs-top">
+          <div>
+            <div class="cs-num mono" style="color:var(--accent);">C &mdash; Family Profile Switching</div>
+            <h4 class="sub-cs-title">Redux Flicker Elimination &mdash; One Correct Re-render</h4>
+            <p class="cs-summary" style="font-size:0.87rem;">
+              Switching between family member profiles triggered multiple intermediate Redux state changes,
+              causing visible screen flickering on every profile change.
+              Optimized the Redux pipeline to batch updates, skipping intermediate states so
+              only the previous valid state and final target state ever propagate to components.
+            </p>
+            <div class="tags">
+              <span class="tag">Redux optimization</span>
+              <span class="tag">State batching</span>
+              <span class="tag">React Native</span>
+            </div>
+            <div class="impact-pills">
+              <span class="ipill">&#10003;&nbsp; Zero flicker on profile switch</span>
+            </div>
+          </div>
+          <div class="cs-impact">
+            <div class="impact-big">0</div>
+            <div class="impact-sub">screen flicker<br/>on profile switch</div>
+          </div>
+        </div>
+        <div class="shots-grid shots-3 stagger">
+          <div>
+            <div class="phone">
+              <div class="phone-screen">
+                <img src="../screen_shots/Dozee/home/group_3_switch_1.png" alt="Switch 1" loading="lazy" />
+              </div>
+            </div>
+            <div class="shot-cap">Profile list</div>
+          </div>
+          <div>
+            <div class="phone">
+              <div class="phone-screen">
+                <img src="../screen_shots/Dozee/home/group_3_switch_2.png" alt="Switch 2" loading="lazy" />
+              </div>
+            </div>
+            <div class="shot-cap">Pod settings</div>
+          </div>
+          <div>
+            <div class="phone">
+              <div class="phone-screen">
+                <img src="../screen_shots/Dozee/home/group_3_switch_3.png" alt="Switch 3" loading="lazy" />
+              </div>
+            </div>
+            <div class="shot-cap">Profile active</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /cs-home -->
+
+    <!-- DOZEE ECG APP -->
+    <div class="cs reveal" id="cs-ecg">
+      <div class="cs-num mono" style="margin-bottom:10px;">DOZEE ECG APP &mdash; Built from Scratch</div>
+      <div class="cs-top">
+        <div>
+          <h3 class="cs-title">Hospital-Grade ECG: Offline-First, Auto-Upload, PDF Generation</h3>
+          <p class="cs-summary">
+            Designed and built the ECG Android app end-to-end for hospital deployment.
+            Nurses scan patient QR codes, capture live ECG via Bluetooth, and the app auto-generates a PDF report.
+            WorkManager ensures the report reaches the server &mdash; even in the background, even on unreliable hospital WiFi.
+            If upload fails, it persists in Room DB and retries automatically until it succeeds.
+          </p>
+          <div class="tags">
+            <span class="tag">Kotlin</span>
+            <span class="tag">MVVM + Clean Architecture</span>
+            <span class="tag">WorkManager</span>
+            <span class="tag">Room DB</span>
+            <span class="tag">Bluetooth (Coroutines)</span>
+            <span class="tag">PDF generation</span>
+            <span class="tag">QR scanning</span>
+            <span class="tag">Offline-first</span>
+          </div>
+          <div class="impact-pills">
+            <span class="ipill">&#10003;&nbsp; 0-to-1 app build</span>
+            <span class="ipill">&#10003;&nbsp; 99% BT connection</span>
+            <span class="ipill">&#10003;&nbsp; 70%+ test coverage</span>
+            <span class="ipill">&#10003;&nbsp; &minus;4 MB data/session</span>
+          </div>
+        </div>
+        <div class="cs-impact">
+          <div class="impact-big" style="font-size:2.6rem;">0&rarr;1</div>
+          <div class="impact-sub">app built from scratch<br/><span class="dim">medical-grade reliability</span></div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>Why this is hard:</strong> Hospital WiFi is unreliable. ECG reports are legal medical documents.
+        A silent upload failure is not acceptable. The app must guarantee delivery under any network condition,
+        even when backgrounded. This required WorkManager + Room DB as a local queue, with retry semantics
+        that survive app restarts, process death, and extended network outages.
+      </div>
+
+      <div class="narrative stagger">
+        <div class="narr-card">
+          <div class="narr-lbl">Problem</div>
+          <div class="narr-text">
+            Hospital WiFi is unreliable. ECG reports are critical medical records.
+            A failed upload can&rsquo;t silently disappear. The app needed guaranteed end-to-end delivery
+            under constrained real-world conditions, including when backgrounded.
+          </div>
+        </div>
+        <div class="narr-card">
+          <div class="narr-lbl">Solution</div>
+          <div class="narr-text">
+            Live ECG &rarr; on-device PDF conversion &rarr; immediate WorkManager upload attempt.
+            On failure: persist to Room DB, schedule background retry (survives process death).
+            Multithreaded BT communication via Coroutines + MVVM state machine for 99% connection reliability.
+          </div>
+        </div>
+        <div class="narr-card">
+          <div class="narr-lbl">Impact</div>
+          <div class="narr-text">
+            Zero ECG reports lost to network failures.
+            Medical-grade reliability for ICU-adjacent workflows.
+            2&ndash;4 MB saved per session via optimised REST + Room caching.
+            70%+ unit &amp; integration test coverage established as team standard.
+          </div>
+        </div>
+      </div>
+
+      <div class="shots-grid shots-4 stagger">
+        <div>
+          <div class="phone">
+            <div class="phone-screen">
+              <img src="../screen_shots/Dozee/ecg/group_1_home.png" alt="ECG Home" loading="lazy" />
+            </div>
+          </div>
+          <div class="shot-cap">Home / select action</div>
+        </div>
+        <div>
+          <div class="phone">
+            <div class="phone-screen">
+              <img src="../screen_shots/Dozee/ecg/group_2_patient_selection_1.png" alt="Patient Selection" loading="lazy" />
+            </div>
+          </div>
+          <div class="shot-cap">QR / patient select</div>
+        </div>
+        <div>
+          <div class="phone">
+            <div class="phone-screen">
+              <img src="../screen_shots/Dozee/ecg/group_3_live_ecg_1.png" alt="Live ECG" loading="lazy" />
+            </div>
+          </div>
+          <div class="shot-cap">Live ECG capture</div>
+        </div>
+        <div>
+          <div class="phone">
+            <div class="phone-screen">
+              <img src="../screen_shots/Dozee/ecg/group_4_ecg_history_1.png" alt="ECG History" loading="lazy" />
+            </div>
+          </div>
+          <div class="shot-cap">History &amp; reports</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /wrap -->
+</section>
+
+
+<!-- ============================================================
+     SKILLS
+============================================================ -->
+<section id="skills">
+  <div class="wrap">
+    <span class="section-eyebrow">// skills</span>
+    <div class="skills-grid stagger reveal">
+      <div class="skill-group">
+        <div class="sg-label">Android Platform</div>
+        <div class="chips">
+          <span class="chip chip-primary">Kotlin</span>
+          <span class="chip">Jetpack Compose</span>
+          <span class="chip">ViewModel</span>
+          <span class="chip">LiveData / Flow</span>
+          <span class="chip">Room</span>
+          <span class="chip">WorkManager</span>
+          <span class="chip">Dagger Hilt</span>
+          <span class="chip">Retrofit / OkHttp</span>
+          <span class="chip">Coroutines</span>
+          <span class="chip">Proguard / R8</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="sg-label">Architecture</div>
+        <div class="chips">
+          <span class="chip">MVVM</span>
+          <span class="chip">Clean Architecture</span>
+          <span class="chip">Offline-First</span>
+          <span class="chip">Modular Design</span>
+          <span class="chip">Repository Pattern</span>
+          <span class="chip">State Machines</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="sg-label">Tooling &amp; Observability</div>
+        <div class="chips">
+          <span class="chip">GitHub Actions / CI/CD</span>
+          <span class="chip">Grafana + Loki</span>
+          <span class="chip">Firebase Crashlytics</span>
+          <span class="chip">Firebase Remote Config</span>
+          <span class="chip">App Distribution</span>
+          <span class="chip">Play Store Publishing</span>
+          <span class="chip">Git</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="sg-label">Cross-Platform &amp; Languages</div>
+        <div class="chips">
+          <span class="chip">Flutter</span>
+          <span class="chip">React Native</span>
+          <span class="chip">Java</span>
+          <span class="chip">Dart</span>
+          <span class="chip">TypeScript</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     CONTACT
+============================================================ -->
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-inner reveal">
+      <span class="section-eyebrow" style="justify-content:center;">// contact</span>
+      <h2 class="contact-headline">
+        Open to full-time roles<br/>
+        <span class="gradient-accent">&amp; interesting problems.</span>
+      </h2>
+      <p class="contact-sub">
+        Actively looking for senior / staff Android or mobile platform roles.<br/>
+        I respond within 24 hours.
+      </p>
+      <div class="contact-actions">
+        <a href="mailto:hello@abhishekverma.dev" class="btn btn-fill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 7L2 7"/></svg>
+          Send Email
+        </a>
+        <a href="#" class="btn btn-ghost">LinkedIn &rarr;</a>
+        <a href="#" class="btn btn-ghost">GitHub &rarr;</a>
+        <a href="/resume.pdf" class="btn btn-ghost" download>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Resume PDF
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+<footer>
+  <span>Built by Abhishek Verma</span>
+  <span>Engineered with intent.</span>
+  <span>&copy; 2025</span>
+</footer>
+
+
+<!-- ============================================================
+     SCRIPTS
+============================================================ -->
+<script>
+  /* ── Typewriter ── */
+  const roles = ["Senior Android Engineer", "Mobile Architect", "Kotlin Developer", "Platform Engineer"];
+  let ri = 0, ci = 0, deleting = false;
+  const tw = document.getElementById('typewriter-text');
+  function tick() {
+    const role = roles[ri];
+    if (!deleting) {
+      tw.textContent = role.slice(0, ci + 1);
+      ci++;
+      if (ci === role.length) {
+        deleting = true;
+        setTimeout(tick, 1800);
+        return;
+      }
+    } else {
+      tw.textContent = role.slice(0, ci - 1);
+      ci--;
+      if (ci === 0) {
+        deleting = false;
+        ri = (ri + 1) % roles.length;
+        setTimeout(tick, 400);
+        return;
+      }
+    }
+    setTimeout(tick, deleting ? 38 : 78);
+  }
+  tick();
+
+  /* ── Progress bar ── */
+  const pb = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+    pb.style.width = Math.min(100, pct) + '%';
+  }, { passive: true });
+
+  /* ── Scroll reveal ── */
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        revealObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal, .stagger').forEach(el => revealObs.observe(el));
+
+  /* ── Counter roll-up ── */
+  function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+  function animateCounter(el) {
+    const target = parseFloat(el.dataset.target);
+    const suffix = el.dataset.suffix || '';
+    const decimals = parseInt(el.dataset.decimals || '0');
+    const duration = 1200;
+    const start = performance.now();
+    function frame(now) {
+      const elapsed = Math.min(now - start, duration);
+      const val = easeOut(elapsed / duration) * target;
+      el.textContent = val.toFixed(decimals) + suffix;
+      if (elapsed < duration) requestAnimationFrame(frame);
+      else el.textContent = target.toFixed(decimals) + suffix;
+    }
+    requestAnimationFrame(frame);
+  }
+
+  let countersStarted = false;
+  const statObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting && !countersStarted) {
+        countersStarted = true;
+        setTimeout(() => {
+          document.querySelectorAll('.rollup').forEach((el, i) => {
+            setTimeout(() => animateCounter(el), i * 150);
+          });
+        }, 300);
+        statObs.disconnect();
+      }
+    });
+  }, { threshold: 0.5 });
+  const statsEl = document.getElementById('stats-strip');
+  if (statsEl) statObs.observe(statsEl);
+
+  /* ── Navbar hide-on-scroll ── */
+  let lastY = 0;
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (y > 60 && y > lastY) {
+      navbar.style.transform = 'translateY(-100%)';
+    } else {
+      navbar.style.transform = 'translateY(0)';
+    }
+    lastY = y;
+  }, { passive: true });
+
+  /* ── Active nav link ── */
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  const activeObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id);
+        });
+      }
+    });
+  }, { threshold: 0.4 });
+  sections.forEach(s => activeObs.observe(s));
+</script>
+
+</body>
+</html>
