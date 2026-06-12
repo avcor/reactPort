@@ -9,61 +9,60 @@ const EMAIL = 'hello@abhishekverma.dev'
 /* ─── shared card shell ─── */
 const card = 'rounded-2xl border border-white/[0.14] border-t-white/[0.25] bg-[#111111] shadow-[inset_0_1px_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(0,0,0,0.6)] overflow-hidden'
 
-/* ─── AV Monogram / clock equivalent ─── */
+/* ─── AV Monogram with morphing blob ─── */
 function AVOrb() {
   const reduced = useReducedMotion()
   return (
-    <div className="relative flex items-center justify-center h-full min-h-[280px]">
-      {/* Outer glow */}
-      <div className="absolute w-72 h-72 rounded-full bg-accent/5 blur-3xl" />
+    <div className="relative flex items-center justify-center h-full min-h-[280px] overflow-hidden">
 
-      {/* Tick marks ring */}
-      <div className="absolute w-64 h-64 rounded-full">
-        {Array.from({ length: 36 }).map((_, i) => (
-          <div
-            key={i}
-            className="absolute left-1/2 top-0 origin-bottom"
-            style={{
-              transform: `translateX(-50%) rotate(${i * 10}deg)`,
-              height: '50%',
-            }}
-          >
-            <div
-              className="mx-auto rounded-full bg-white/10"
-              style={{
-                width: i % 3 === 0 ? '1.5px' : '1px',
-                height: i % 3 === 0 ? '6px' : '4px',
-              }}
-            />
-          </div>
-        ))}
-      </div>
-
-      {/* Spinning conic ring */}
+      {/* Morphing blob — outer glow layer */}
       <div
-        className={`w-52 h-52 rounded-full flex items-center justify-center ${reduced ? '' : 'animate-spin-slow'}`}
+        className={`absolute w-56 h-56 opacity-30 ${reduced ? 'rounded-full' : 'animate-morph-slow'}`}
         style={{
-          background: 'conic-gradient(from 0deg, rgb(var(--accent)), transparent 35%, rgb(var(--accent) / 0.4) 55%, transparent 100%)',
-          padding: '1.5px',
+          background: 'radial-gradient(circle at 40% 40%, rgb(var(--accent) / 0.8), rgb(var(--accent) / 0.1) 70%)',
+          filter: 'blur(32px)',
         }}
-      >
-        <div
-          className={`w-full h-full rounded-full bg-[#111111] flex items-center justify-center ${reduced ? '' : '[animation:spin-slow_18s_linear_infinite_reverse]'}`}
+      />
+
+      {/* Morphing blob — main shape */}
+      <div
+        className={`absolute w-44 h-44 ${reduced ? 'rounded-full' : 'animate-morph'}`}
+        style={{
+          background: 'linear-gradient(135deg, rgb(var(--accent) / 0.18) 0%, rgb(var(--accent) / 0.06) 60%, transparent 100%)',
+          border: '1px solid rgb(var(--accent) / 0.25)',
+        }}
+      />
+
+      {/* Inner morphing blob — offset for depth */}
+      <div
+        className={`absolute w-32 h-32 ${reduced ? 'rounded-full' : 'animate-morph'}`}
+        style={{
+          animationDelay: '-4s',
+          background: 'linear-gradient(225deg, rgb(var(--accent) / 0.22) 0%, transparent 70%)',
+          border: '1px solid rgb(var(--accent) / 0.15)',
+        }}
+      />
+
+      {/* AV monogram on top */}
+      <div className="relative z-10 flex flex-col items-center gap-3">
+        <span
+          className="font-mono font-bold text-accent select-none"
+          style={{ fontSize: 'clamp(2.8rem, 5vw, 4rem)', letterSpacing: '-0.04em' }}
         >
-          <span
-            className="font-mono font-bold text-accent select-none"
-            style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', letterSpacing: '-0.04em' }}
-          >
-            AV
-          </span>
+          AV
+        </span>
+        <div className="flex items-center gap-1.5">
+          <span className="w-1 h-1 rounded-full bg-accent/60" />
+          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/30">Abhishek Verma</span>
+          <span className="w-1 h-1 rounded-full bg-accent/60" />
         </div>
       </div>
 
-      {/* Cardinal labels */}
-      <span className="absolute top-2 left-1/2 -translate-x-1/2 text-[9px] font-mono text-white/20 uppercase tracking-widest">Android</span>
-      <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-[9px] font-mono text-white/20 uppercase tracking-widest">500k+</span>
-      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[9px] font-mono text-white/20 uppercase tracking-widest" style={{ writingMode: 'vertical-rl' }}>4+ yrs</span>
-      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-mono text-white/20 uppercase tracking-widest" style={{ writingMode: 'vertical-rl' }}>Kotlin</span>
+      {/* Corner labels */}
+      <span className="absolute top-3 left-4 text-[9px] font-mono text-white/20 uppercase tracking-widest">Android</span>
+      <span className="absolute top-3 right-4 text-[9px] font-mono text-white/20 uppercase tracking-widest">500k+</span>
+      <span className="absolute bottom-3 left-4 text-[9px] font-mono text-white/20 uppercase tracking-widest">4+ yrs</span>
+      <span className="absolute bottom-3 right-4 text-[9px] font-mono text-white/20 uppercase tracking-widest">Kotlin</span>
     </div>
   )
 }
@@ -265,7 +264,7 @@ function CardAvailability() {
           <Globe size={72} className="text-white/8 stroke-[0.8]" />
           <Globe size={72} className="text-accent/20 stroke-[0.8] absolute inset-0 blur-sm" />
           {/* India dot */}
-          <div className="absolute w-2 h-2 rounded-full bg-accent shadow-[0_0_8px_rgba(55,138,221,0.8)] top-[52%] left-[67%]" />
+          <div className="absolute w-2 h-2 rounded-full bg-accent shadow-[0_0_8px_rgba(91,138,74,0.8)] top-[52%] left-[67%]" />
         </div>
       </div>
 
@@ -343,8 +342,8 @@ function CardApps() {
 /* ─── Main Section ─── */
 export function BentoSection() {
   return (
-    <section id="bento" className="py-16 px-5 md:px-10 lg:px-16">
-      <div className="max-w-5xl mx-auto">
+    <section id="bento" className="py-16 px-4 md:px-6">
+      <div className="w-full max-w-[1400px] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
           {/* Col 1, rows 1–2: Identity */}

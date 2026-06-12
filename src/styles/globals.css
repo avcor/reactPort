@@ -31,8 +31,8 @@
   --surface: 10 10 10;
   --surface-2: 17 17 17;
   --border-rgb: 255 255 255;
-  --accent: 55 138 221;
-  --accent-dim: 15 40 75;
+  --accent: 91 138 74;
+  --accent-dim: 28 52 20;
   --text-primary: 237 237 237;
   --text-muted: 140 140 140;
   --text-dim: 70 70 70;
@@ -43,8 +43,8 @@
   --surface: 255 255 255;
   --surface-2: 240 240 240;
   --border-rgb: 0 0 0;
-  --accent: 34 112 192;
-  --accent-dim: 218 234 255;
+  --accent: 74 114 56;
+  --accent-dim: 220 238 212;
   --text-primary: 13 13 13;
   --text-muted: 85 85 85;
   --text-dim: 170 170 170;
@@ -85,4 +85,27 @@
 @keyframes shimmer {
   0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
+}
+
+@keyframes morph {
+  0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  20%       { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+  40%       { border-radius: 50% 50% 20% 80% / 25% 80% 20% 75%; }
+  60%       { border-radius: 67% 33% 47% 53% / 37% 20% 80% 63%; }
+  80%       { border-radius: 39% 61% 67% 33% / 41% 58% 42% 59%; }
+}
+
+@keyframes morph-slow {
+  0%, 100% { border-radius: 40% 60% 60% 40% / 40% 40% 60% 60%; }
+  25%       { border-radius: 60% 40% 40% 60% / 60% 60% 40% 40%; }
+  50%       { border-radius: 50% 50% 30% 70% / 70% 30% 70% 30%; }
+  75%       { border-radius: 30% 70% 70% 30% / 30% 70% 30% 70%; }
+}
+
+.animate-morph {
+  animation: morph 8s ease-in-out infinite;
+}
+
+.animate-morph-slow {
+  animation: morph-slow 12s ease-in-out infinite;
 }

@@ -42,6 +42,17 @@ export function Hero() {
           </a>
         </motion.div>
 
+        {/* Morphing glow behind name */}
+        {!reduced && (
+          <div
+            className="absolute w-[600px] h-[300px] -z-10 animate-morph-slow opacity-20 pointer-events-none"
+            style={{
+              background: 'radial-gradient(ellipse at center, rgb(var(--accent)) 0%, transparent 70%)',
+              filter: 'blur(60px)',
+            }}
+          />
+        )}
+
         {/* Giant name — full viewport width */}
         <motion.h1
           initial={reduced ? {} : { opacity: 0, y: 30 }}
