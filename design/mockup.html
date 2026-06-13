@@ -860,7 +860,7 @@
     ============================================================ */
 
     /* Main case studies (cs1–cs5, cs-ecg) */
-    .cs:not(#cs-home) {
+    .cs:not(.cs--wide) {
       display: grid;
       grid-template-columns: 1fr 1.3fr;
       column-gap: 48px;
@@ -868,7 +868,7 @@
     }
 
     /* Screenshots panel → left column, sticky while content scrolls */
-    .cs:not(#cs-home) > .shots-grid {
+    .cs:not(.cs--wide) > .shots-grid {
       grid-column: 1;
       grid-row: 1 / span 10;
       position: sticky;
@@ -879,7 +879,7 @@
     }
 
     /* All other direct children → right column, stacked */
-    .cs:not(#cs-home) > :not(.shots-grid) {
+    .cs:not(.cs--wide) > :not(.shots-grid) {
       grid-column: 2;
     }
 
@@ -911,6 +911,108 @@
       font-weight: 650;
       letter-spacing: -0.015em;
       margin-bottom: 8px;
+    }
+
+    /* ============================================================
+       VIEW PAGER
+    ============================================================ */
+    .vp { position: relative; }
+
+    .vp-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+      gap: 0;
+    }
+    .vp-tabs::-webkit-scrollbar { display: none; }
+
+    .vp-tab {
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      padding: 14px 22px;
+      font-size: 0.72rem;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: color 0.18s, border-color 0.18s;
+      text-transform: uppercase;
+    }
+    .vp-tab:hover { color: var(--text-muted); }
+    .vp-tab.active {
+      color: var(--text-primary);
+      border-bottom-color: var(--accent);
+    }
+
+    .vp-track { position: relative; }
+
+    .vp-slide {
+      display: none;
+      padding-top: 64px;
+      padding-bottom: 0;
+    }
+    .vp-slide.active {
+      display: block;
+      animation: vp-in 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes vp-in {
+      from { opacity: 0; transform: translateX(20px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Remove inherited .cs spacing since the VP manages it */
+    .vp-slide .cs {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .vp-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 56px;
+      padding-top: 28px;
+      border-top: 1px solid var(--border);
+    }
+
+    .vp-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 20px;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: border-color 0.18s, color 0.18s, opacity 0.18s;
+    }
+    .vp-btn:hover:not(:disabled) {
+      border-color: var(--border-hover);
+      color: var(--text-primary);
+    }
+    .vp-btn:disabled { opacity: 0.28; cursor: default; }
+
+    .vp-counter {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      letter-spacing: 0.06em;
+    }
+    .vp-counter span { color: var(--text-primary); }
+
+    /* Mobile: collapse vp layout */
+    @media (max-width: 768px) {
+      .vp-tab { padding: 12px 14px; font-size: 0.65rem; }
+      .vp-nav { flex-direction: column; gap: 16px; }
     }
 
     /* ============================================================
@@ -1403,9 +1505,9 @@
       .co-screen { grid-template-columns: 1fr; gap: 44px; padding: 100px 24px 60px; }
       .co-watermark { display: none; }
       /* collapse two-column case study layout on mobile */
-      .cs:not(#cs-home) { grid-template-columns: 1fr; }
-      .cs:not(#cs-home) > .shots-grid { grid-column: 1; grid-row: auto; position: static; grid-template-columns: repeat(2,1fr) !important; }
-      .cs:not(#cs-home) > :not(.shots-grid) { grid-column: 1; }
+      .cs:not(.cs--wide) { grid-template-columns: 1fr; }
+      .cs:not(.cs--wide) > .shots-grid { grid-column: 1; grid-row: auto; position: static; grid-template-columns: repeat(2,1fr) !important; }
+      .cs:not(.cs--wide) > :not(.shots-grid) { grid-column: 1; }
       .sub-cs { grid-template-columns: 1fr; }
       .sub-cs > .shots-grid { grid-column: 1; grid-row: auto; position: static; }
       .sub-cs > .cs-top { grid-column: 1; grid-row: auto; }
@@ -1688,9 +1790,22 @@
 <!-- DIGII CASE STUDIES -->
 <section class="chapter-work">
   <div class="wrap">
+    <div class="vp" id="digii-work">
 
-    <!-- ── CS 01: Flutter Integration ── -->
-    <div class="cs reveal" id="cs1">
+      <!-- Tab bar -->
+      <div class="vp-tabs">
+        <button class="vp-tab active" data-slide="0">01 &mdash; Flutter</button>
+        <button class="vp-tab" data-slide="1">02 &mdash; Liveness</button>
+        <button class="vp-tab" data-slide="2">03 &mdash; Compose</button>
+        <button class="vp-tab" data-slide="3">04 &mdash; Payments</button>
+        <button class="vp-tab" data-slide="4">05 &mdash; Multi-tenant</button>
+      </div>
+
+      <div class="vp-track">
+
+      <!-- ── Slide 01: Flutter Integration ── -->
+      <div class="vp-slide active" id="cs1">
+        <div class="cs reveal">
       <div class="cs-top">
         <div>
           <div class="cs-num mono">01 &mdash; FLUTTER INTEGRATION &amp; CI/CD</div>
@@ -1778,11 +1893,12 @@
           </div>
           <div class="shot-cap">Pass Console</div>
         </div>
-      </div>
-    </div>
+        </div><!-- /cs -->
+      </div><!-- /vp-slide cs1 -->
 
-    <!-- ── CS 02: Face Liveness ── -->
-    <div class="cs reveal" id="cs2">
+      <!-- ── Slide 02: Face Liveness ── -->
+      <div class="vp-slide" id="cs2">
+        <div class="cs reveal">
       <div class="cs-top">
         <div>
           <div class="cs-num mono">02 &mdash; ANTI-SPOOFING ATTENDANCE</div>
@@ -1871,11 +1987,12 @@
           </div>
           <div class="shot-cap">Verification failed</div>
         </div>
-      </div>
-    </div>
+        </div><!-- /cs -->
+      </div><!-- /vp-slide cs2 -->
 
-    <!-- ── CS 03: Compose Migration ── -->
-    <div class="cs reveal" id="cs3">
+      <!-- ── Slide 03: Compose Migration ── -->
+      <div class="vp-slide" id="cs3">
+        <div class="cs reveal">
       <div class="cs-top">
         <div>
           <div class="cs-num mono">03 &mdash; JETPACK COMPOSE MIGRATION</div>
@@ -1970,11 +2087,12 @@
           </div>
           <div class="shot-cap">Attendance report</div>
         </div>
-      </div>
-    </div>
+        </div><!-- /cs -->
+      </div><!-- /vp-slide cs3 -->
 
-    <!-- ── CS 04: Payments UX ── -->
-    <div class="cs reveal" id="cs4">
+      <!-- ── Slide 04: Payments UX ── -->
+      <div class="vp-slide" id="cs4">
+        <div class="cs reveal">
       <div class="cs-top">
         <div>
           <div class="cs-num mono">04 &mdash; PAYMENTS UX OVERHAUL</div>
@@ -2048,11 +2166,12 @@
           </div>
           <div class="shot-cap">Fee breakdown</div>
         </div>
-      </div>
-    </div>
+        </div><!-- /cs -->
+      </div><!-- /vp-slide cs4 -->
 
-    <!-- ── CS 05: Multi-tenant ── -->
-    <div class="cs reveal" id="cs5">
+      <!-- ── Slide 05: Multi-tenant ── -->
+      <div class="vp-slide" id="cs5">
+        <div class="cs reveal">
       <div class="cs-top">
         <div>
           <div class="cs-num mono">05 &mdash; MULTI-TENANT ACCOUNT SWITCH</div>
@@ -2145,8 +2264,18 @@
           <div class="shot-cap">Account details</div>
         </div>
       </div>
-    </div>
+        </div><!-- /cs -->
+      </div><!-- /vp-slide cs5 -->
 
+      </div><!-- /vp-track -->
+
+      <div class="vp-nav">
+        <button class="vp-btn vp-prev" disabled>&#8592; Prev</button>
+        <span class="vp-counter"><span>1</span> / 5</span>
+        <button class="vp-btn vp-next">Next &#8594;</button>
+      </div>
+
+    </div><!-- /vp digii-work -->
   </div><!-- /wrap -->
 </section><!-- /chapter-work digii -->
 
@@ -2219,9 +2348,19 @@
 <!-- DOZEE CASE STUDIES -->
 <section class="chapter-work">
   <div class="wrap">
+    <div class="vp" id="dozee-work">
 
-    <!-- DOZEE HOME APP -->
-    <div class="cs reveal" id="cs-home">
+      <!-- Tab bar -->
+      <div class="vp-tabs">
+        <button class="vp-tab active" data-slide="0">Home App</button>
+        <button class="vp-tab" data-slide="1">ECG App</button>
+      </div>
+
+      <div class="vp-track">
+
+      <!-- ── Slide: Dozee Home App ── -->
+      <div class="vp-slide active" id="cs-home">
+        <div class="cs cs--wide reveal">
       <div class="cs-num mono" style="margin-bottom:10px;">DOZEE HOME APP &mdash; Sleep Monitoring</div>
       <h3 class="cs-title" style="margin-bottom:40px;">Charts, BLE Pod Management &amp; Multi-Profile Switching</h3>
 
@@ -2388,10 +2527,12 @@
         </div>
       </div>
 
-    </div><!-- /cs-home -->
+        </div><!-- /cs cs--wide -->
+      </div><!-- /vp-slide cs-home -->
 
-    <!-- DOZEE ECG APP -->
-    <div class="cs reveal" id="cs-ecg">
+      <!-- ── Slide: Dozee ECG App ── -->
+      <div class="vp-slide" id="cs-ecg">
+        <div class="cs reveal">
       <div class="cs-num mono" style="margin-bottom:10px;">DOZEE ECG APP &mdash; Built from Scratch</div>
       <div class="cs-top">
         <div>
@@ -2494,8 +2635,18 @@
           <div class="shot-cap">History &amp; reports</div>
         </div>
       </div>
-    </div>
+        </div><!-- /cs -->
+      </div><!-- /vp-slide cs-ecg -->
 
+      </div><!-- /vp-track -->
+
+      <div class="vp-nav">
+        <button class="vp-btn vp-prev" disabled>&#8592; Prev</button>
+        <span class="vp-counter"><span>1</span> / 2</span>
+        <button class="vp-btn vp-next">Next &#8594;</button>
+      </div>
+
+    </div><!-- /vp dozee-work -->
   </div><!-- /wrap -->
 </section>
 
@@ -2788,6 +2939,64 @@
 
     // Init after paint so offsetTops are settled
     requestAnimationFrame(() => { layoutDots(); onScroll(); });
+  })();
+
+  /* ── View Pagers ── */
+  (function() {
+    const vpInstances = new Map();
+
+    document.querySelectorAll('.vp').forEach(vp => {
+      const tabs   = [...vp.querySelectorAll('.vp-tab')];
+      const slides = [...vp.querySelectorAll('.vp-slide')];
+      const prev   = vp.querySelector('.vp-prev');
+      const next   = vp.querySelector('.vp-next');
+      const counter = vp.querySelector('.vp-counter');
+      let current = 0;
+
+      function goTo(idx) {
+        if (idx < 0 || idx >= slides.length) return;
+        slides[current].classList.remove('active');
+        tabs[current].classList.remove('active');
+        current = idx;
+        slides[current].classList.add('active');
+        tabs[current].classList.add('active');
+        if (prev)  prev.disabled  = current === 0;
+        if (next)  next.disabled  = current === slides.length - 1;
+        if (counter) counter.innerHTML = `<span>${current + 1}</span> / ${slides.length}`;
+        // keep active tab visible in scrollable tab bar
+        tabs[current].scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+        // re-trigger scroll reveal for newly visible slide
+        requestAnimationFrame(() => {
+          slides[current].querySelectorAll('.reveal:not(.visible), .stagger:not(.visible)').forEach(el => {
+            if (el.getBoundingClientRect().top < window.innerHeight) el.classList.add('visible');
+          });
+        });
+      }
+
+      tabs.forEach((tab, i) => tab.addEventListener('click', () => goTo(i)));
+      if (prev) prev.addEventListener('click', () => goTo(current - 1));
+      if (next) next.addEventListener('click', () => goTo(current + 1));
+
+      vpInstances.set(vp.id, { goTo, slides });
+      goTo(0);
+    });
+
+    // Timeline sub-dot clicks: intercept and activate the right slide
+    document.querySelectorAll('.tl-item[data-type="sub"]').forEach(link => {
+      link.addEventListener('click', e => {
+        const targetId = link.dataset.id;
+        for (const [vpId, { goTo, slides }] of vpInstances) {
+          const idx = slides.findIndex(s => s.id === targetId);
+          if (idx !== -1) {
+            e.preventDefault();
+            goTo(idx);
+            const vpEl = document.getElementById(vpId);
+            if (vpEl) vpEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            break;
+          }
+        }
+      });
+    });
   })();
 </script>
 
