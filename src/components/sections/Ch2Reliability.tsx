@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform, useInView, useReducedMotion, type MotionValue } from 'framer-motion'
+import { PhoneReveal } from '@/components/ui/PhoneReveal'
 
 function usePin(height = '220vh') {
   const ref = useRef<HTMLDivElement>(null)
@@ -403,7 +404,26 @@ export function Ch2Reliability() {
       </div>
 
       <Scene1ECG />
+
+      <PhoneReveal
+        src="/screenshots/dozee-ecg/group_3_live_ecg_1.png"
+        alt="12-lead ECG capture screen — Dozee ECG app"
+        label="Chapter 02 · Offline-First ECG"
+        caption="12-lead ECG captured and persisted locally. Uploads automatically when network returns. Zero data loss."
+        variant="bare"
+        metric="99% upload success"
+      />
+
       <Scene2MultiTenant />
+
+      <PhoneReveal
+        src="/screenshots/digii/Group_5_Tenant_switch.jpg"
+        alt="Switch Account — multi-tenant account switching"
+        label="Chapter 02 · Multi-Tenant Switching"
+        caption="Switch Account. One tap, zero logout. Token swap, cache flush, state sync — invisible to the user."
+        variant="portrait"
+      />
+
       <Scene3BLE />
       <Ch2Ending />
     </section>

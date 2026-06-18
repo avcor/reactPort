@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform, useInView, useReducedMotion, type MotionValue } from 'framer-motion'
+import { PhoneReveal } from '@/components/ui/PhoneReveal'
 
 function usePin(height = '260vh') {
   const ref = useRef<HTMLDivElement>(null)
@@ -219,6 +220,14 @@ export function Ch4Trust() {
 
         </div>
       </div>
+
+      <PhoneReveal
+        src="/screenshots/digii/Group_2_Faculty_Attendance_Face_Scanner_1.jpg"
+        alt="Faculty Attendance — liveness detection face scanner"
+        label="Chapter 04 · Trust & Verification"
+        caption="Punch In. Real face, real moment, real location. MLKit detects — no photo can pass this."
+        variant="portrait"
+      />
 
       {/* Ending statement */}
       <div ref={endRef} className="min-h-screen flex items-center justify-center bg-black px-6">

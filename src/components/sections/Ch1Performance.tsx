@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform, useInView, useReducedMotion, type MotionValue } from 'framer-motion'
+import { PhoneReveal } from '@/components/ui/PhoneReveal'
 
 /* ─── helpers ─── */
 function usePin(height = '220vh') {
@@ -573,8 +574,28 @@ export function Ch1Performance() {
       </div>
 
       <Scene1Flutter />
+
+      <PhoneReveal
+        src="/screenshots/digii/Group_1_Access_Management_Dasboard_flutter_1.jpg"
+        alt="Access Management Dashboard — Flutter inside Android"
+        label="Chapter 01 · Flutter Integration"
+        caption="Access Management Dashboard. Flutter module inside a native Android app. Now loads instantly."
+        variant="portrait"
+        metric="4s → ≈0"
+      />
+
       <Scene2CICD />
       <Scene3Charts />
+
+      <PhoneReveal
+        src="/screenshots/dozee-home/group_1_chart_1.png"
+        alt="Respiration Rate chart — Dozee Home"
+        label="Chapter 01 · Chart Optimization"
+        caption="Respiration Rate. 9,000+ nightly data points filtered, smoothed, and rendered in under 2 seconds."
+        variant="bare"
+        metric="<2s load"
+      />
+
       <Ch1Ending />
     </section>
   )

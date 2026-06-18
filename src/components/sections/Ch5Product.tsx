@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform, useInView, useReducedMotion } from 'framer-motion'
+import { PhoneReveal } from '@/components/ui/PhoneReveal'
 
 function usePin(height = '260vh') {
   const ref = useRef<HTMLDivElement>(null)
@@ -181,6 +182,15 @@ export function Ch5Product() {
 
         </div>
       </div>
+
+      <PhoneReveal
+        src="/screenshots/digii/Group_4_Payments_Consolidated.jpg"
+        alt="Payments — consolidated dues screen"
+        label="Chapter 05 · Product Engineering"
+        caption="Payments. Consolidated dues at a glance. No ambiguity. Cross-team collaboration made visible."
+        variant="portrait"
+        metric="API calls −60%"
+      />
 
       {/* Ending */}
       <div ref={endRef} className="min-h-screen flex items-center justify-center bg-black px-6">

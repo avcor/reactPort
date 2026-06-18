@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform, useInView, useReducedMotion } from 'framer-motion'
+import { PhoneReveal } from '@/components/ui/PhoneReveal'
 
 function usePin(height = '280vh') {
   const ref = useRef<HTMLDivElement>(null)
@@ -174,6 +175,15 @@ export function Ch3Modernizing() {
 
         </div>
       </div>
+
+      <PhoneReveal
+        src="/screenshots/digii/Group_3_Hostel_Attendance_first_compose_migration_1.jpg"
+        alt="Hostel Attendance — first Jetpack Compose screen"
+        label="Chapter 03 · Jetpack Compose"
+        caption="Hostel Attendance. First screen shipped in Compose after the full migration. Built in 20% less time."
+        variant="portrait"
+        metric="Dev time −20%"
+      />
 
       {/* Ending statement */}
       <div ref={endRef} className="min-h-screen flex items-center justify-center bg-black px-6">
