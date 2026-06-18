@@ -1,18 +1,21 @@
 import { useState, useEffect } from 'react'
-import { Command, Menu, X } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useActiveSection } from '@/hooks/useActiveSection'
-import { ThemeToggle } from '@/components/ui/ThemeToggle'
-import { openCommandPalette } from '@/components/ui/CommandPalette'
 
 const NAV_LINKS = [
-  { label: 'Experience', href: '#experience' },
-  { label: 'Work',       href: '#projects' },
-  { label: 'Skills',     href: '#skills' },
-  { label: 'Contact',    href: '#contact' },
+  { label: 'Performance',  href: '#ch1-performance' },
+  { label: 'Reliability',  href: '#ch2-reliability' },
+  { label: 'Modernizing',  href: '#ch3-modernizing' },
+  { label: 'Trust',        href: '#ch4-trust' },
+  { label: 'Philosophy',   href: '#philosophy' },
+  { label: 'Contact',      href: '#contact' },
 ]
 
-const SECTIONS = ['hero', 'bento', 'experience', 'projects', 'skills', 'contact']
+const SECTIONS = [
+  'opening', 'ch1-performance', 'ch2-reliability',
+  'ch3-modernizing', 'ch4-trust', 'ch5-product', 'philosophy', 'contact',
+]
 
 export function Navbar() {
   const [hidden, setHidden]     = useState(false)
@@ -66,23 +69,10 @@ export function Navbar() {
                 </a>
               )
             })}
-            <div className="w-px h-4 bg-white/10 mx-1" />
-            <ThemeToggle />
-            <motion.button
-              onClick={openCommandPalette}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              aria-label="Open command palette (⌘K)"
-              className="flex items-center gap-1 px-3 py-1.5 rounded-full text-text-dim hover:text-text-muted hover:bg-white/[0.05] transition-all duration-200 text-xs font-mono"
-            >
-              <Command size={12} />
-              <span>⌘K</span>
-            </motion.button>
           </div>
 
           {/* Mobile */}
           <div className="flex md:hidden items-center gap-2">
-            <ThemeToggle />
             <button
               className="flex items-center justify-center w-9 h-9 rounded-full border border-white/10 text-text-muted hover:text-text-primary transition-colors"
               onClick={() => setMenuOpen(o => !o)}
