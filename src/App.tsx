@@ -9,10 +9,12 @@ import { Ch4Trust } from '@/components/sections/Ch4Trust'
 import { Ch5Product } from '@/components/sections/Ch5Product'
 import { FinalChapter } from '@/components/sections/FinalChapter'
 import { Contact } from '@/components/sections/Contact'
+import InteractiveBackground from '@/components/ui/InteractiveBackground'
 
 export default function App() {
   return (
-    <div className="bg-black min-h-screen">
+    <div className="relative z-0 min-h-screen">
+      <InteractiveBackground />
       <Navbar />
       <main>
         <OpeningSequence />

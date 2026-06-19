@@ -48,8 +48,8 @@ function SystemDiagram() {
           <path
             key={i}
             d={`M${x1},${y1} Q${mx},${my} ${x2},${y2}`}
-            stroke="white"
-            strokeOpacity="0.08"
+            stroke="rgb(134, 239, 172)"
+            strokeOpacity="0.24"
             strokeWidth="1"
           />
         )
@@ -63,11 +63,11 @@ function SystemDiagram() {
           <motion.circle
             key={i}
             r={1.5}
-            fill="rgb(91,138,74)"
+            fill="rgb(134, 239, 172)"
             animate={{
               cx: [x1, x2],
               cy: [y1, y2],
-              opacity: [0, 0.9, 0.9, 0],
+              opacity: [0, 1, 1, 0],
             }}
             transition={{
               duration: 2.8 + i * 0.4,
@@ -87,17 +87,17 @@ function SystemDiagram() {
             width={n.w}
             height={30}
             rx={5}
-            stroke="white"
-            strokeOpacity="0.1"
-            fill="white"
-            fillOpacity="0.025"
+            stroke="rgb(134, 239, 172)"
+            strokeOpacity="0.32"
+            fill="rgb(134, 239, 172)"
+            fillOpacity="0.07"
           />
           <text
             x={n.w / 2}
             y={20}
             textAnchor="middle"
-            fill="white"
-            fillOpacity="0.22"
+            fill="rgb(220, 252, 231)"
+            fillOpacity="0.62"
             fontSize="10"
             fontFamily="JetBrains Mono, monospace"
           >
@@ -134,7 +134,7 @@ export function OpeningSequence() {
   const blockOpacity = useTransform(scrollYProgress, [0.54, 0.66], [1, 0])
 
   // System diagram fades in behind
-  const diagramOpacity = useTransform(scrollYProgress, [0.60, 0.77], [0, 0.55])
+  const diagramOpacity = useTransform(scrollYProgress, [0.60, 0.77], [0, 0.9])
 
   // Identity reveal
   const identityOpacity = useTransform(scrollYProgress, [0.80, 0.94], [0, 1])
@@ -145,7 +145,7 @@ export function OpeningSequence() {
 
   return (
     <section ref={ref} style={{ height: '300vh' }} id="opening">
-      <div className="sticky top-0 h-screen overflow-hidden bg-black flex items-center justify-center">
+      <div className="sticky top-0 h-screen overflow-hidden bg-transparent flex items-center justify-center">
 
         {/* Abstract system diagram */}
         <motion.div
@@ -157,7 +157,11 @@ export function OpeningSequence() {
 
         {/* Vignette over diagram */}
         <div className="absolute inset-0 pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse 70% 60% at 50% 50%, transparent 0%, black 80%)' }} />
+          style={{
+            background:
+              'radial-gradient(ellipse 72% 62% at 50% 50%, transparent 0%, rgb(var(--page-bg) / 0.52) 72%, rgb(var(--page-bg) / 0.82) 100%)',
+          }}
+        />
 
         {/* Opening statement — 3 lines */}
         <motion.div
